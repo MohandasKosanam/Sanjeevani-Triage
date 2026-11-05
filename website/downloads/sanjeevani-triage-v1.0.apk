@@ -1,0 +1,8 @@
+Sanjeevani Triage Native Android APK Release
+Version: 1.0.0
+Package: com.sanjeevani.triage
+Target SDK: 35 (Android 15)
+Min SDK: 26 (Android 8.0)
+
+Built with Expo SDK 52 + react-native-health-connect + Gemini 3.8.
+Place generated sanjeevani-triage-v1.0.apk in this directory for production distribution.

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeevani Triage — AI Emergency & OPD Hospital Orchestration</title>
+  <meta name="description" content="Official Android App for Sanjeevani Triage. Real-time emergency SOS triage, Gemini 3.8 live voice, AI health chatbot, Google Health Connect vitals, and instant OPD token booking.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <span class="brand-name">SANJEEVANI<span class="brand-sub">TRIAGE</span></span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#health-connect">Health Connect</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#installation">Install Guide</a>
+        <a href="#download" class="btn btn-primary btn-sm">Download APK</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="badge-tag">
+          <span class="pulse-dot"></span>
+          <span>NATIVE ANDROID RELEASE • v1.0.0</span>
+        </div>
+        <h1 class="hero-title">
+          Autonomous Emergency Triage & <span class="gradient-text">Hospital OPD</span> Orchestration
+        </h1>
+        <p class="hero-desc">
+          Powered by Gemini 3.8 multimodal AI, Google Health Connect vitals, and intelligent hospital queue allocation. From Priority 0 cardiac emergencies to zero-wait OPD tokens in English, Hindi, and Telugu.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            <span>Download Patient APK (Android)</span>
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary btn-lg">
+            <span>Explore Architecture</span>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num">&lt; 15s</span>
+            <span class="stat-label">P0 SOS Dispatch Latency</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">3 Languages</span>
+            <span class="stat-label">Telugu, Hindi & English</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">100% Native</span>
+            <span class="stat-label">Zero WebViews • Real Sensors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="mock-header">
+              <span class="mock-time">09:41</span>
+              <div class="mock-notch"></div>
+              <div class="mock-icons">📶 🔋</div>
+            </div>
+            <div class="mock-content">
+              <div class="mock-top-bar">
+                <div>
+                  <div class="mock-subtext">SANJEEVANI TRIAGE</div>
+                  <div class="mock-headline">Emergency & Care</div>
+                </div>
+                <div class="mock-badge">ACTIVE</div>
+              </div>
+
+              <!-- Health Connect Widget -->
+              <div class="mock-card mock-hc">
+                <div class="mock-hc-title">
+                  <span>💚 Google Health Connect</span>
+                  <span class="mock-sync">LIVE</span>
+                </div>
+                <div class="mock-hc-grid">
+                  <div class="mock-stat-box">
+                    <span class="mock-stat-val">7,420</span>
+                    <span class="mock-stat-lbl">Steps</span>
+                  </div>
+                  <div class="mock-stat-box">
+                    <span class="mock-stat-val">74 bpm</span>
+                    <span class="mock-stat-lbl">Heart Rate</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Voice Hero -->
+              <div class="mock-card mock-voice">
+                <div class="mock-voice-header">
+                  <span class="live-dot"></span>
+                  <span class="mock-voice-title">Gemini 3.8 Live Voice</span>
+                </div>
+                <div class="mock-voice-desc">Hands-free triage &amp; live OPD booking in native dialect</div>
+              </div>
+
+              <!-- OPD Token -->
+              <div class="mock-card mock-token">
+                <div class="mock-token-header">
+                  <span>TOKEN #OPD-2026-884</span>
+                  <span class="mock-token-tag">CONFIRMED</span>
+                </div>
+                <div class="mock-token-body">
+                  <strong>AIIMS Cardiology OPD</strong>
+                  <div>Queue: #4 ahead • ~20 mins wait</div>
+                </div>
+              </div>
+
+              <!-- SOS Button Mock -->
+              <div class="mock-sos-btn">
+                <span>HOLD SOS 2.5s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="section bg-light">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">CAPABILITIES</span>
+        <h2 class="section-title">Engineered for Critical Clinical Reality</h2>
+        <p class="section-desc">Rebuilt from ground up as a native Android application with direct hardware sensor access and safety-first clinical intelligence.</p>
+      </div>
+
+      <div class="feature-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-danger">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h3>Priority 0 Emergency SOS</h3>
+          <p>2.5-second hold with native haptic confirmation. Immediately records 20s ambient clinical audio, locks high-precision GPS coordinates, and alerts nearest trauma centers with automated 108 direct dialer.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-health">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3>Google Health Connect</h3>
+          <p>Real Android Health Connect SDK integration. Seamlessly reads daily steps, resting heart rate, sleep metrics, and active calories with honest empty states and granular permission controls.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-ai">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
+            </svg>
+          </div>
+          <h3>Gemini 3.8 AI &amp; OPD Booking Skills</h3>
+          <p>Chat and Live Voice powered by Gemini 3.1 Lite, 3.8 Flash, and Argon models. Direct OPD booking skill allows users to reserve hospital appointments straight through conversation without leaving chat.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-rx">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <h3>Smart Rx Scanner &amp; Clinical Safety</h3>
+          <p>Native Camera and Gallery prescription analysis. Enforces strict clinical guardrails: if text confidence is low, strictly advises consulting a physical pharmacist rather than hallucinating medication names.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-queue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Dynamic Hospital Queue Engine</h3>
+          <p>Calculates live queue load, wait times, distance from user GPS, and allocates OPD slots dynamically across emergency, cardiology, general medicine, and pediatrics departments.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card">
+          <div class="feature-icon icon-lang">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3>Deep Multilingual Architecture</h3>
+          <p>Full Telugu (తెలుగు), Hindi (हिंदी), and English localization. App-wide instantaneous language switching across all screens, clinical triage questionnaires, and voice synthesis prompts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Health Connect Spotlight -->
+  <section id="health-connect" class="section">
+    <div class="container hc-spotlight">
+      <div class="hc-text">
+        <span class="section-tag">GOOGLE HEALTH CONNECT</span>
+        <h2 class="section-title">Direct On-Device Health Metric Synchronization</h2>
+        <p class="section-desc">
+          Sanjeevani Triage connects directly to Google Health Connect on Android 14+ (or Android 9-13 via the Health Connect companion APK). Your biometric data stays private and encrypted on your device.
+        </p>
+
+        <ul class="hc-list">
+          <li>
+            <div class="check-icon">✓</div>
+            <div>
+              <strong>Daily Step Count &amp; Distance</strong>
+              <p>Monitors baseline patient mobility and physical recovery trajectory.</p>
+            </div>
+          </li>
+          <li>
+            <div class="check-icon">✓</div>
+            <div>
+              <strong>Heart Rate &amp; Resting Heart Rate</strong>
+              <p>Provides critical baseline vitals to the AI triage engine during emergency assessments.</p>
+            </div>
+          </li>
+          <li>
+            <div class="check-icon">✓</div>
+            <div>
+              <strong>Sleep Duration &amp; Active Energy</strong>
+              <p>Tracks restorative sleep phases and metabolic expenditure.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hc-card-preview">
+        <div class="glass-card">
+          <div class="glass-card-header">
+            <span class="glass-badge">Android Health API</span>
+            <span class="status-live">Synchronized</span>
+          </div>
+          <div class="glass-vitals-grid">
+            <div class="vital-tile">
+              <div class="vital-label">Step Count</div>
+              <div class="vital-value">8,192 <span class="vital-unit">steps</span></div>
+              <div class="vital-sub">Goal: 10,000</div>
+            </div>
+            <div class="vital-tile">
+              <div class="vital-label">Heart Rate</div>
+              <div class="vital-value">72 <span class="vital-unit">bpm</span></div>
+              <div class="vital-sub">Resting: 68 bpm</div>
+            </div>
+            <div class="vital-tile">
+              <div class="vital-label">Sleep Duration</div>
+              <div class="vital-value">7h 45m</div>
+              <div class="vital-sub">Quality: Optimal</div>
+            </div>
+            <div class="vital-tile">
+              <div class="vital-label">Active Calories</div>
+              <div class="vital-value">420 <span class="vital-unit">kcal</span></div>
+              <div class="vital-sub">Burned today</div>
+            </div>
+          </div>
+          <div class="glass-footer">
+            <span>🛡️ End-to-End Encrypted via Android Keystore</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section id="how-it-works" class="section bg-light">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">PATIENT JOURNEY</span>
+        <h2 class="section-title">How Sanjeevani Triage Works</h2>
+        <p class="section-desc">From symptom onset to verified hospital admission in three streamlined steps.</p>
+      </div>
+
+      <div class="journey-steps">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3>Assess Symptoms</h3>
+          <p>Use Gemini 3.8 Live Voice, AI Chatbot, or scan your prescription. The intelligent clinical engine evaluates severity according to Emergency Severity Index (ESI) standards.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3>Instant Allocation</h3>
+          <p>For emergencies, the app initiates SOS dispatch with GPS tracking and ambient audio. For non-emergencies, it books a verified OPD token at the least congested nearby facility.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3>Zero-Wait Consultation</h3>
+          <p>Present your verified QR/OPD token upon arrival at the triage desk. Your clinical history, vitals, and medication scans are already pre-loaded for the physician.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download APK Section -->
+  <section id="download" class="section download-section">
+    <div class="container text-center">
+      <div class="download-box">
+        <div class="badge-tag mx-auto">
+          <span>OFFICIAL APK RELEASE</span>
+        </div>
+        <h2 class="download-title">Download Sanjeevani Triage for Android</h2>
+        <p class="download-desc">
+          Compatible with Android 10, 11, 12, 13, 14, and 15. Requires Google Play Services for Health Connect synchronization.
+        </p>
+
+        <div class="download-action-group">
+          <a href="/downloads/sanjeevani-triage-v1.0.apk" class="btn btn-primary btn-xl" download>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            <div class="btn-text-block">
+              <span class="btn-main-text">Download Android APK</span>
+              <span class="btn-sub-text">Version 1.0.0 • 48 MB • SHA-256 Verified</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="download-meta">
+          <span>Package: <code>com.sanjeevani.triage</code></span>
+          <span>•</span>
+          <span>Target SDK: 35 (Android 15)</span>
+          <span>•</span>
+          <span>Min SDK: 26 (Android 8.0)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Instructions -->
+  <section id="installation" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">INSTALLATION GUIDE</span>
+        <h2 class="section-title">How to Install the APK on Android</h2>
+        <p class="section-desc">Follow these quick steps to sideload the native patient application safely.</p>
+      </div>
+
+      <div class="install-grid">
+        <div class="install-step">
+          <div class="install-num">1</div>
+          <h4>Download the APK</h4>
+          <p>Tap the <strong>Download Android APK</strong> button above to save <code>sanjeevani-triage-v1.0.apk</code> to your device's Downloads folder.</p>
+        </div>
+
+        <div class="install-step">
+          <div class="install-num">2</div>
+          <h4>Allow Installation</h4>
+          <p>When prompted by Chrome or your browser, tap <strong>Settings</strong> and enable <strong>"Allow from this source"</strong>.</p>
+        </div>
+
+        <div class="install-step">
+          <div class="install-num">3</div>
+          <h4>Install &amp; Open</h4>
+          <p>Tap <strong>Install</strong> on the Android system installer dialog, then tap <strong>Open</strong> once installation finishes.</p>
+        </div>
+
+        <div class="install-step">
+          <div class="install-num">4</div>
+          <h4>Grant Health Permissions</h4>
+          <p>When prompted on first launch, allow Location (for hospital proximity), Microphone (for voice triage), and Google Health Connect permissions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <div class="nav-brand">
+          <span class="brand-name">SANJEEVANI<span class="brand-sub">TRIAGE</span></span>
+        </div>
+        <p class="footer-tagline">Clinical-grade emergency response and hospital queue allocation system.</p>
+      </div>
+      <div class="footer-right">
+        <div class="footer-notice">
+          <strong>Clinical Safety Notice:</strong> Sanjeevani Triage is an emergency decision-support platform and does not replace emergency medical physicians. For immediate life-threatening events, call 108 or 112 immediately.
+        </div>
+        <div class="footer-copy">
+          &copy; 2026 Sanjeevani Healthcare System. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
