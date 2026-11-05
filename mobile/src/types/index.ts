@@ -75,6 +75,7 @@ export interface OPDToken {
   distance_km: number;
   created_at: string;
   estimated_wait_minutes: number;
+  queue_position?: number;
 }
 
 export interface SOSEvent {
@@ -128,7 +129,9 @@ export interface DailyHealthInsight {
 
 export interface HealthConnectData {
   stepsToday: number;
+  steps?: number;
   heartRateAvg: number;
+  heartRate?: number;
   sleepHours: number;
   activeCalories: number;
   distanceMeters: number;

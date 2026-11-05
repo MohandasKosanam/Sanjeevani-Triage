@@ -13,19 +13,19 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#0d9488',
-        tabBarInactiveTintColor: '#94a3b8',
+        tabBarInactiveTintColor: '#64748b',
         tabBarStyle: {
           backgroundColor: '#ffffff',
-          borderTopColor: '#f1f5f9',
+          borderTopColor: '#e2e8f0',
           borderTopWidth: 1,
-          height: Platform.OS === 'android' ? 64 : 84,
-          paddingBottom: Platform.OS === 'android' ? 8 : 28,
-          paddingTop: 8,
-          elevation: 12,
+          height: Platform.OS === 'android' ? 62 : 82,
+          paddingBottom: Platform.OS === 'android' ? 6 : 24,
+          paddingTop: 6,
+          elevation: 8,
           shadowColor: '#000000',
           shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.06,
-          shadowRadius: 6,
+          shadowOpacity: 0.05,
+          shadowRadius: 4,
         },
         tabBarLabelStyle: {
           fontSize: 10,
@@ -36,9 +36,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t.navHome || 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size - 2} color={color} />
+          title: 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={21} color={color} />
           ),
         }}
       />
@@ -46,9 +46,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: t.navChat || 'AI Chat',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size - 2} color={color} />
+          title: 'Chat',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'chatbubbles' : 'chatbubbles-outline'} size={21} color={color} />
           ),
         }}
       />
@@ -70,9 +70,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="records"
         options={{
-          title: t.navRecords || 'Records',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size - 2} color={color} />
+          title: 'Records',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'document-text' : 'document-text-outline'} size={21} color={color} />
           ),
         }}
       />
@@ -80,14 +80,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tokens"
         options={{
-          title: t.navTokens || 'Tokens',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="ticket" size={size - 2} color={color} />
+          title: 'Tokens',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'ticket' : 'ticket-outline'} size={21} color={color} />
           ),
         }}
       />
 
-      {/* Profile hidden from tab bar, accessed via avatar in Home header */}
+      {/* Profile screen accessed via avatar in Home header */}
       <Tabs.Screen
         name="profile"
         options={{

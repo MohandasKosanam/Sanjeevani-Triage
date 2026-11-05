@@ -37,7 +37,7 @@ export const NativeSOSButton: React.FC = () => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.15,
+          toValue: 1.1,
           duration: 350,
           useNativeDriver: true,
         }),
@@ -98,13 +98,12 @@ export const NativeSOSButton: React.FC = () => {
           lng: lng.toString(),
         },
       });
-    } catch (err: any) {
-      console.error('Failed to trigger SOS:', err);
-      // Still navigate so patient is protected
+    } catch (e) {
+      console.error('Failed to trigger emergency SOS:', e);
       router.push({
         pathname: '/sos-active',
         params: {
-          sos_id: `SOS-${Date.now().toString().slice(-6)}`,
+          sos_id: 'SOS-' + Date.now(),
           lat: lat.toString(),
           lng: lng.toString(),
         },
@@ -123,17 +122,18 @@ export const NativeSOSButton: React.FC = () => {
       >
         <Animated.View
           style={[
-            styles.buttonWrapper,
+            styles.outerHalo,
             { transform: [{ scale: pulseAnim }] },
-            isPressing && styles.buttonPressing,
+            isPressing && styles.outerHaloPressing,
           ]}
         >
-          <View style={styles.innerCircle}>
-            <Ionicons name="warning" size={24} color="#ffffff" />
-            <Text style={styles.sosText}>SOS</Text>
-            <Text style={styles.holdText}>2.5s</Text>
+          <View style={[styles.innerRedCircle, isPressing && styles.innerRedPressing]}>
+            <Ionicons name="alert-circle" size={26} color="#ffffff" />
           </View>
         </Animated.View>
+
+        {/* Text underneath the red button matching screenshot 2 */}
+        <Text style={styles.holdSosLabel}>HOLD SOS</Text>
       </Pressable>
     </View>
   );
@@ -143,45 +143,48 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    top: -24,
+    top: -18,
   },
   pressable: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonWrapper: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: '#dc2626',
+  outerHalo: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: '#fee2e2',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 8,
-    shadowColor: '#dc2626',
+    shadowColor: '#ef4444',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.45,
-    shadowRadius: 8,
-    borderWidth: 3,
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  outerHaloPressing: {
+    backgroundColor: '#fecaca',
+  },
+  innerRedCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ef4444',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
     borderColor: '#ffffff',
   },
-  buttonPressing: {
-    backgroundColor: '#991b1b',
+  innerRedPressing: {
+    backgroundColor: '#dc2626',
     borderColor: '#fca5a5',
   },
-  innerCircle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sosText: {
-    color: '#ffffff',
-    fontSize: 11,
+  holdSosLabel: {
+    color: '#dc2626',
+    fontSize: 9,
     fontWeight: '900',
-    letterSpacing: 0.5,
-    marginTop: -2,
-  },
-  holdText: {
-    color: '#fee2e2',
-    fontSize: 8,
-    fontWeight: '700',
+    letterSpacing: 0.6,
+    marginTop: 4,
+    textTransform: 'uppercase',
   },
 });

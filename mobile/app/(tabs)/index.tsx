@@ -6,7 +6,6 @@ import {
   ScrollView,
   Pressable,
   RefreshControl,
-  Linking,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -44,11 +43,11 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
-  const activeToken = tokens.find((t) => t.status === 'waiting' || t.status === 'in_consultation');
+  const activeToken = tokens.find((tok) => tok.status === 'waiting' || tok.status === 'in_consultation');
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-      {/* Top Application Bar */}
+      {/* Top Application Bar matching Screenshot 2 */}
       <View style={styles.topBar}>
         <View style={styles.brandRow}>
           <View style={styles.logoBadge}>
@@ -56,202 +55,173 @@ export default function HomeScreen() {
           </View>
           <View>
             <View style={styles.appNameRow}>
-              <Text style={styles.appName}>{t.appTitle || 'Sanjeevani'}</Text>
+              <Text style={styles.appName}>Sanjeevani Triage</Text>
               <View style={styles.opdBadge}>
                 <Text style={styles.opdBadgeText}>OPD</Text>
               </View>
             </View>
             <View style={styles.locationRow}>
-              <Ionicons name="location" size={10} color="#0d9488" />
-              <Text style={styles.locationText}>{t.medicalHubLocation || 'Visakhapatnam Hub'}</Text>
+              <Ionicons name="location" size={11} color="#0d9488" style={{ marginRight: 2 }} />
+              <Text style={styles.locationText}>Visakhapatnam Medical Hub</Text>
             </View>
           </View>
         </View>
 
-        {/* Language Switcher & Profile Button */}
-        <View style={styles.topRightActions}>
-          <View style={styles.langSelector}>
-            {(['te', 'hi', 'en'] as Language[]).map((lang) => (
-              <Pressable
-                key={lang}
-                onPress={() => setLanguage(lang)}
-                style={[styles.langBtn, language === lang && styles.langBtnActive]}
-              >
-                <Text
-                  style={[
-                    styles.langBtnText,
-                    language === lang && styles.langBtnTextActive,
-                  ]}
-                >
-                  {lang === 'te' ? 'తె' : lang === 'hi' ? 'हि' : 'EN'}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-
+        {/* Language Switcher Pill (తెలుగు | हिंदी | EN) */}
+        <View style={styles.langContainer}>
           <Pressable
-            onPress={() => router.push('/(tabs)/profile')}
-            style={styles.avatarBtn}
+            onPress={() => setLanguage('te')}
+            style={[styles.langItem, language === 'te' && styles.langItemActive]}
           >
-            <Text style={styles.avatarText}>
-              {profile?.name ? profile.name.charAt(0) : 'R'}
+            <Text style={[styles.langText, language === 'te' && styles.langTextActive]}>
+              తెలుగు
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setLanguage('hi')}
+            style={[styles.langItem, language === 'hi' && styles.langItemActive]}
+          >
+            <Text style={[styles.langText, language === 'hi' && styles.langTextActive]}>
+              हिंदी
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setLanguage('en')}
+            style={[styles.langItem, language === 'en' && styles.langItemActive]}
+          >
+            <Text style={[styles.langText, language === 'en' && styles.langTextActive]}>
+              EN
             </Text>
           </Pressable>
         </View>
       </View>
 
-      {/* Main Scroll Content */}
+      {/* Main Scrollable Content */}
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#0d9488']} />}
       >
-        {/* Patient Greeting */}
-        <View style={styles.greetingSection}>
-          <Text style={styles.greetingTitle}>
-            {t.greeting
-              ? t.greeting(profile?.name || (language === 'te' ? 'రమేష్ వర్మ' : language === 'hi' ? 'रमेश वर्मा' : 'Ramesh Varma'))
-              : `Namaste, ${profile?.name || 'Ramesh'}`}
-          </Text>
-          <Text style={styles.greetingSubtitle}>
-            {t.greetingSubtitle || 'How can our healthcare AI assist you today?'}
-          </Text>
+        {/* Patient Greeting Row with Right Avatar */}
+        <View style={styles.greetingRow}>
+          <View style={styles.greetingTextGroup}>
+            <Text style={styles.greetingTitle}>
+              {language === 'te'
+                ? 'నమస్కారం, రమేష్ వర్మ'
+                : language === 'hi'
+                ? 'नमस्ते, रमेश वर्मा'
+                : 'Hello, Ramesh Varma'}
+            </Text>
+            <Text style={styles.greetingSubtitle}>
+              {language === 'te'
+                ? 'ఈరోజు మీ ఆరోగ్యానికి ఎలా సహాయపడగలం?'
+                : language === 'hi'
+                ? 'आज हम आपके स्वास्थ्य में कैसे सहायता कर सकते हैं?'
+                : 'How can we assist your health today?'}
+            </Text>
+          </View>
+
+          <Pressable
+            onPress={() => router.push('/(tabs)/profile')}
+            style={styles.avatarCircle}
+          >
+            <Text style={styles.avatarInitial}>
+              {profile?.name ? profile.name.charAt(0) : 'R'}
+            </Text>
+          </Pressable>
         </View>
 
-        {/* Genuine Google Health Connect Card */}
+        {/* CARD 1: DAILY HEALTH INSIGHT (Google Health Connect) */}
         <HealthConnectCard />
 
-        {/* PRIMARY HERO: Live AI Voice Conversation & OPD Booking */}
-        <Pressable
-          onPress={() => router.push('/modal/live-voice')}
-          style={({ pressed }) => [styles.heroCard, pressed && { opacity: 0.95 }]}
-        >
-          {/* Top Hero Pill Row */}
-          <View style={styles.heroTopRow}>
-            <View style={styles.heroMicBadge}>
-              <Ionicons name="radio" size={20} color="#2dd4bf" />
-            </View>
-            <View style={styles.heroBadgeGroup}>
-              <View style={styles.liveTag}>
-                <View style={styles.pulsingDot} />
-                <Text style={styles.liveTagText}>Gemini 3.8 Live</Text>
+        {/* CARD 2: GEMINI 3.8 LIVE VOICE CONVERSATION */}
+        <View style={styles.voiceHeroCard}>
+          {/* Header Row */}
+          <View style={styles.voiceHeaderRow}>
+            <View style={styles.voiceTitleGroup}>
+              <View style={styles.voiceIconBadge}>
+                <Ionicons name="radio" size={16} color="#2dd4bf" />
               </View>
-              <View style={styles.skillTag}>
-                <Ionicons name="flash" size={10} color="#fde047" />
-                <Text style={styles.skillTagText}>OPD Skill</Text>
+              <View>
+                <Text style={styles.geminiTag}>GEMINI 3.8 LIVE</Text>
+                <Text style={styles.geminiLangText}>Telugu • Hindi • English</Text>
               </View>
             </View>
+
+            {/* OPD Booking Skill Badge */}
+            <Pressable
+              onPress={() => router.push('/modal/live-voice')}
+              style={styles.skillPill}
+            >
+              <Ionicons name="sparkles" size={11} color="#2dd4bf" style={{ marginRight: 4 }} />
+              <Text style={styles.skillPillText}>OPD Booking Skill</Text>
+            </Pressable>
           </View>
 
-          <Text style={styles.heroTitle}>
-            {t.liveVoiceHeroTitle || 'Live AI Voice Conversation'}
-          </Text>
-          <Text style={styles.heroDesc}>
-            {t.liveVoiceHeroSubtitle ||
-              'Real-time conversational voice triage & instant OPD hospital queue token booking.'}
+          {/* Body Copy */}
+          <Text style={styles.voiceMainTitle}>Live AI Voice Conversation</Text>
+          <Text style={styles.voiceMainDesc}>
+            Real-time conversational voice triage & instant OPD booking
           </Text>
 
-          <View style={styles.heroFooter}>
-            <View style={styles.heroLangChips}>
-              <Text style={styles.heroLangChip}>Telugu</Text>
-              <Text style={styles.heroLangChip}>Hindi</Text>
-              <Text style={styles.heroLangChip}>English</Text>
-            </View>
-            <View style={styles.startCallPill}>
-              <Text style={styles.startCallText}>{t.startLiveVoiceHero || 'Talk Live'}</Text>
-              <Ionicons name="arrow-forward" size={14} color="#0f172a" />
-            </View>
+          {/* Action Buttons Row */}
+          <View style={styles.voiceActionRow}>
+            <Pressable
+              onPress={() => router.push('/modal/live-voice')}
+              style={({ pressed }) => [styles.startVoiceBtn, pressed && { opacity: 0.9 }]}
+            >
+              <Ionicons name="mic" size={16} color="#2dd4bf" style={{ marginRight: 6 }} />
+              <Text style={styles.startVoiceText}>Start Live Conversation</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => router.push('/(tabs)/tokens')}
+              style={({ pressed }) => [styles.opdTokenBtn, pressed && { opacity: 0.9 }]}
+            >
+              <Ionicons name="flash" size={13} color="#ffffff" style={{ marginRight: 4 }} />
+              <Text style={styles.opdTokenText}>OPD Token →</Text>
+            </Pressable>
           </View>
-        </Pressable>
+        </View>
 
-        {/* SECONDARY ACTION: Smart Rx Decoder */}
+        {/* CARD 3: SMART RX DECODER */}
         <Pressable
           onPress={() => router.push('/modal/rx-scanner')}
-          style={({ pressed }) => [styles.rxCard, pressed && { opacity: 0.92 }]}
+          style={({ pressed }) => [styles.rxCard, pressed && { opacity: 0.94 }]}
         >
-          <View style={styles.rxIconBox}>
-            <Ionicons name="camera" size={20} color="#0d9488" />
+          <View style={styles.rxIconBadge}>
+            <Ionicons name="camera-outline" size={22} color="#0d9488" />
           </View>
-          <View style={styles.rxTextBox}>
-            <Text style={styles.rxTitle}>{t.smartRxTitle || 'Smart Rx Decoder'}</Text>
-            <Text style={styles.rxDesc}>
-              {t.smartRxDesc || 'Photograph doctor prescription & get safe dosage instructions'}
+          <View style={styles.rxTextGroup}>
+            <Text style={styles.rxTitle}>Smart Rx Decoder</Text>
+            <Text style={styles.rxSubtitle}>
+              Photograph doctor prescription & get instructions safely
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
         </Pressable>
 
-        {/* DUAL FEATURE CARDS */}
-        <View style={styles.dualGrid}>
-          {/* Card 1: Gemini Live Audio */}
-          <Pressable
-            onPress={() => router.push('/modal/live-voice')}
-            style={({ pressed }) => [styles.gridCard, pressed && { opacity: 0.92 }]}
-          >
-            <View style={styles.gridCardIcon}>
-              <Ionicons name="mic" size={18} color="#2dd4bf" />
-            </View>
-            <Text style={styles.gridCardTitle}>{t.liveVoiceTitle || 'Live Voice'}</Text>
-            <Text style={styles.gridCardDesc}>{t.liveVoiceDesc || 'Real-time audio'}</Text>
-            <View style={styles.gridCardLink}>
-              <Text style={styles.gridLinkText}>⚡ {t.talkLive || 'Talk'}</Text>
-              <Ionicons name="chevron-forward" size={12} color="#2dd4bf" />
-            </View>
-          </Pressable>
-
-          {/* Card 2: AI Health Chatbot */}
-          <Pressable
-            onPress={() => router.push('/(tabs)/chat')}
-            style={({ pressed }) => [styles.gridCard, pressed && { opacity: 0.92 }]}
-          >
-            <View style={[styles.gridCardIcon, { backgroundColor: 'rgba(99, 102, 241, 0.2)' }]}>
-              <Ionicons name="chatbubbles" size={18} color="#a5b4fc" />
-            </View>
-            <Text style={styles.gridCardTitle}>{t.aiChatTitle || 'AI Chatbot'}</Text>
-            <Text style={styles.gridCardDesc}>{t.aiChatDesc || 'Multi-turn Q&A'}</Text>
-            <View style={styles.gridCardLink}>
-              <Text style={styles.gridLinkText}>⚡ {t.bookOpdSkillBtn || 'Book'}</Text>
-              <Ionicons name="chevron-forward" size={12} color="#2dd4bf" />
-            </View>
-          </Pressable>
-        </View>
-
-        {/* ACTIVE OPD TOKEN BANNER (If available) */}
+        {/* ACTIVE OPD TOKEN PREVIEW (When booked) */}
         {activeToken && (
           <Pressable
             onPress={() => router.push('/(tabs)/tokens')}
-            style={styles.tokenBanner}
+            style={styles.activeTokenCard}
           >
-            <View style={styles.tokenBannerHeader}>
-              <View style={styles.tokenBannerLeft}>
-                <Ionicons name="ticket" size={16} color="#0d9488" />
-                <Text style={styles.tokenBannerTitle}>Active OPD Queue Token</Text>
+            <View style={styles.tokenTopRow}>
+              <View style={styles.tokenBadgeGroup}>
+                <Ionicons name="ticket" size={14} color="#0d9488" style={{ marginRight: 4 }} />
+                <Text style={styles.tokenTitle}>Active OPD Token</Text>
               </View>
               <Text style={styles.tokenNumber}>{activeToken.token_number}</Text>
             </View>
-            <View style={styles.tokenDetailsRow}>
-              <Text style={styles.tokenDetailText}>{activeToken.hospital_name}</Text>
-              <Text style={styles.tokenWaitText}>~{activeToken.estimated_wait_minutes}m wait</Text>
-            </View>
+            <Text style={styles.tokenHospital}>{activeToken.hospital_name}</Text>
+            <Text style={styles.tokenMeta}>
+              Queue: #{activeToken.queue_position} ahead • ~{activeToken.estimated_wait_minutes} mins wait
+            </Text>
           </Pressable>
         )}
 
-        {/* 108 Emergency Helpline Banner */}
-        <View style={styles.emergencyBanner}>
-          <View style={styles.emergencyLeft}>
-            <Ionicons name="call" size={16} color="#e11d48" />
-            <View>
-              <Text style={styles.emergencyTitle}>{t.ambulanceHelpline || 'Ambulance Helpline 108'}</Text>
-              <Text style={styles.emergencySub}>Toll-free 24/7 direct dialer</Text>
-            </View>
-          </View>
-          <Pressable
-            onPress={() => Linking.openURL('tel:108')}
-            style={styles.dialButton}
-          >
-            <Text style={styles.dialButtonText}>{t.dial108 || 'Call 108'}</Text>
-          </Pressable>
-        </View>
+        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -264,47 +234,48 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
-    backgroundColor: '#ffffff',
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
   },
   logoBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     backgroundColor: '#0d9488',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 10,
   },
   logoText: {
     color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '900',
+    fontSize: 18,
+    fontWeight: '800',
   },
   appNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
   },
   appName: {
-    fontSize: 14,
-    fontWeight: '900',
+    fontSize: 15,
+    fontWeight: '800',
     color: '#0f172a',
+    letterSpacing: -0.3,
   },
   opdBadge: {
     backgroundColor: '#ccfbf1',
-    paddingHorizontal: 6,
-    paddingVertical: 1,
     borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    marginLeft: 6,
   },
   opdBadgeText: {
     fontSize: 9,
@@ -314,354 +285,258 @@ const styles = StyleSheet.create({
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
     marginTop: 1,
   },
   locationText: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#64748b',
+    fontWeight: '500',
   },
-  topRightActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  langSelector: {
+  langContainer: {
     flexDirection: 'row',
     backgroundColor: '#f1f5f9',
-    borderRadius: 10,
-    padding: 2,
+    borderRadius: 20,
+    padding: 3,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
   },
-  langBtn: {
+  langItem: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
+    borderRadius: 16,
   },
-  langBtnActive: {
+  langItemActive: {
     backgroundColor: '#0d9488',
   },
-  langBtnText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#64748b',
+  langText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#475569',
   },
-  langBtnTextActive: {
+  langTextActive: {
     color: '#ffffff',
   },
-  avatarBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: '#ccfbf1',
-    borderWidth: 1,
-    borderColor: '#5eead4',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#0f766e',
-  },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 40,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    backgroundColor: '#f8fafc',
   },
-  greetingSection: {
+  greetingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 16,
   },
+  greetingTextGroup: {
+    flex: 1,
+  },
   greetingTitle: {
-    fontSize: 18,
-    fontWeight: '900',
+    fontSize: 20,
+    fontWeight: '800',
     color: '#0f172a',
+    letterSpacing: -0.5,
   },
   greetingSubtitle: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#64748b',
     marginTop: 2,
   },
-  heroCard: {
-    backgroundColor: '#0f172a',
-    borderRadius: 24,
+  avatarCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#ccfbf1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#99f6e4',
+  },
+  avatarInitial: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0f766e',
+  },
+  voiceHeroCard: {
+    backgroundColor: '#0b1b2b',
+    borderRadius: 22,
     padding: 18,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: 'rgba(45, 212, 191, 0.3)',
-    elevation: 4,
-    shadowColor: '#0d9488',
+    borderColor: '#115e59',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.15,
     shadowRadius: 8,
+    elevation: 4,
   },
-  heroTopRow: {
+  voiceHeaderRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  heroMicBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 14,
-    backgroundColor: 'rgba(45, 212, 191, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(45, 212, 191, 0.4)',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heroBadgeGroup: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  liveTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(45, 212, 191, 0.2)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(45, 212, 191, 0.3)',
-  },
-  pulsingDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#2dd4bf',
-  },
-  liveTagText: {
-    fontSize: 9,
-    fontWeight: '800',
-    color: '#2dd4bf',
-  },
-  skillTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: 'rgba(253, 224, 71, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  skillTagText: {
-    fontSize: 9,
-    fontWeight: '800',
-    color: '#fef08a',
-  },
-  heroTitle: {
-    fontSize: 16,
-    fontWeight: '900',
-    color: '#ffffff',
-    marginBottom: 4,
-  },
-  heroDesc: {
-    fontSize: 11,
-    color: '#94a3b8',
-    lineHeight: 16,
     marginBottom: 14,
   },
-  heroFooter: {
+  voiceTitleGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(148, 163, 184, 0.15)',
   },
-  heroLangChips: {
-    flexDirection: 'row',
-    gap: 4,
-  },
-  heroLangChip: {
-    fontSize: 9,
-    fontWeight: '700',
-    color: '#cbd5e1',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  startCallPill: {
-    flexDirection: 'row',
+  voiceIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(20, 184, 166, 0.15)',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#2dd4bf',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
+    justifyContent: 'center',
+    marginRight: 8,
   },
-  startCallText: {
-    fontSize: 11,
+  geminiTag: {
+    fontSize: 12,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#2dd4bf',
+    letterSpacing: 0.5,
+  },
+  geminiLangText: {
+    fontSize: 10,
+    color: '#94a3b8',
+    marginTop: 1,
+  },
+  skillPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0d3834',
+    borderWidth: 1,
+    borderColor: '#14b8a6',
+    borderRadius: 14,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+  },
+  skillPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#2dd4bf',
+  },
+  voiceMainTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 4,
+    letterSpacing: -0.3,
+  },
+  voiceMainDesc: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#94a3b8',
+    marginBottom: 16,
+  },
+  voiceActionRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  startVoiceBtn: {
+    flex: 1.2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#08332e',
+    borderWidth: 1,
+    borderColor: '#134e4a',
+    borderRadius: 14,
+    paddingVertical: 11,
+  },
+  startVoiceText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#2dd4bf',
+  },
+  opdTokenBtn: {
+    flex: 0.9,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0d9488',
+    borderRadius: 14,
+    paddingVertical: 11,
+  },
+  opdTokenText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#ffffff',
   },
   rxCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    borderRadius: 20,
+    borderRadius: 16,
     padding: 14,
-    marginBottom: 14,
     borderWidth: 1,
     borderColor: '#e2e8f0',
+    marginBottom: 14,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
-    shadowRadius: 4,
+    shadowRadius: 3,
     elevation: 1,
   },
-  rxIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 14,
-    backgroundColor: '#f0fdfa',
-    borderWidth: 1,
-    borderColor: '#ccfbf1',
+  rxIconBadge: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#ccfbf1',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
   },
-  rxTextBox: {
+  rxTextGroup: {
     flex: 1,
   },
   rxTitle: {
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#0f172a',
+  },
+  rxSubtitle: {
+    fontSize: 11,
+    color: '#64748b',
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  activeTokenCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
+    borderLeftWidth: 4,
+    borderLeftColor: '#0d9488',
+    marginBottom: 14,
+  },
+  tokenTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  tokenBadgeGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tokenTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#0d9488',
+  },
+  tokenNumber: {
+    fontSize: 12,
     fontWeight: '800',
     color: '#0f172a',
   },
-  rxDesc: {
-    fontSize: 10,
+  tokenHospital: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1e293b',
+  },
+  tokenMeta: {
+    fontSize: 11,
     color: '#64748b',
     marginTop: 2,
-  },
-  dualGrid: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 14,
-  },
-  gridCard: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-    borderRadius: 20,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#1e293b',
-  },
-  gridCardIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: 'rgba(45, 212, 191, 0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  gridCardTitle: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#ffffff',
-  },
-  gridCardDesc: {
-    fontSize: 9,
-    color: '#94a3b8',
-    marginTop: 2,
-    marginBottom: 10,
-  },
-  gridCardLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 6,
-    borderTopWidth: 1,
-    borderTopColor: '#1e293b',
-  },
-  gridLinkText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#2dd4bf',
-  },
-  tokenBanner: {
-    backgroundColor: '#f0fdfa',
-    borderRadius: 18,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#99f6e4',
-    marginBottom: 14,
-  },
-  tokenBannerHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  tokenBannerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  tokenBannerTitle: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#0f766e',
-  },
-  tokenNumber: {
-    fontSize: 11,
-    fontWeight: '900',
-    color: '#0f766e',
-    backgroundColor: '#ccfbf1',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  tokenDetailsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  tokenDetailText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#334155',
-  },
-  tokenWaitText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#d97706',
-  },
-  emergencyBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff1f2',
-    borderRadius: 18,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#fecdd3',
-  },
-  emergencyLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-  },
-  emergencyTitle: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#9f1239',
-  },
-  emergencySub: {
-    fontSize: 9,
-    color: '#be123c',
-  },
-  dialButton: {
-    backgroundColor: '#e11d48',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
-  },
-  dialButtonText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '800',
   },
 });
