@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isValidId(userId);
+      allow create, update: if isValidId(userId) && request.resource.data.name is string && request.resource.data.name.size() <= 100;
+    }
+
+    // Triage Records Collection
+    match /triage_records/{triageId} {
+      allow read: if isValidId(triageId);
+      allow create, update: if isValidId(triageId) && request.resource.data.tier is number && request.resource.data.severity_score is number;
+    }
+
+    // OPD Tokens Collection
+    match /opd_tokens/{tokenId} {
+      allow read: if isValidId(tokenId);
+      allow create, update: if isValidId(tokenId) && request.resource.data.token_number is string;
+    }
+
+    // SOS Emergency Events Collection
+    match /sos_events/{sosId} {
+      allow read: if isValidId(sosId);
+      allow create, update: if isValidId(sosId) && request.resource.data.priority == 0;
+    }
+
+    // Chat Messages Collection
+    match /chat_messages/{messageId} {
+      allow read, delete: if isValidId(messageId);
+      allow create, update: if isValidId(messageId) && request.resource.data.content is string && request.resource.data.content.size() <= 10000;
+    }
+
+    // Chat Conversations Collection (with session history)
+    match /chat_conversations/{convId} {
+      allow read, delete: if isValidId(convId);
+      allow create, update: if isValidId(convId);
+
+      match /messages/{messageId} {
+        allow read, delete: if isValidId(messageId);
+        allow create, update: if isValidId(messageId);
+      }
+    }
+  }
+}
