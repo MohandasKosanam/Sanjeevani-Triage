@@ -56,6 +56,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "64526434-5d03-41db-83a3-68cd3bc651b7"
+      }
+    },
+    "owner": "mohandaskosanam"
   }
 }
