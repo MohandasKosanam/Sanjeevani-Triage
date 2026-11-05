@@ -1,21 +1,26 @@
+import 'dotenv/config';
 import { GoogleGenAI, Type } from '@google/genai';
 import { Language, TriageTier } from '../types';
 
-// Centralized Gemini SDK Client
-const apiKey = process.env.GEMINI_API_KEY || '';
-export const ai = apiKey
-  ? new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        },
+// Centralized Gemini SDK Client getter
+export function getGeminiClient(): GoogleGenAI | null {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
       },
-    })
-  : null;
+    },
+  });
+}
 
-// Configurable model name adhering to Gemini API skill
-export const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+export const ai = getGeminiClient();
+
+// Configurable model name adhering to verified active Gemini API models
+export const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+export const FALLBACK_MODELS = ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
 
 export interface ChatMessageInput {
   role: 'user' | 'model';
@@ -35,7 +40,7 @@ export interface ChatResponseResult {
  */
 export async function chatWithGemini(
   messages: ChatMessageInput[],
-  modelChoice: 'gemini-4-argon' | 'gemini-3.8-flash' | 'gemini-3.1-flash-lite' = 'gemini-3.8-flash',
+  modelChoice: string = 'gemini-3.1-flash-lite',
   systemInstruction?: string,
   language: string = 'te'
 ): Promise<ChatResponseResult> {
@@ -72,81 +77,86 @@ export async function chatWithGemini(
     detectedDept = 'Dermatology';
   }
 
-  if (ai) {
-    try {
-      const contents = messages.map((m) => ({
-        role: m.role,
-        parts: [{ text: m.content }],
-      }));
+  const client = getGeminiClient();
+  if (client) {
+    const candidateModels = Array.from(new Set([modelChoice, GEMINI_MODEL, ...FALLBACK_MODELS]));
 
-      const sysInstruction =
-        systemInstruction ||
-        `You are Sanjeevani Healthcare Assistant, a knowledgeable, empathetic, multilingual medical guide with OPD Booking Skills.
+    for (const modelName of candidateModels) {
+      try {
+        const contents = messages.map((m) => ({
+          role: m.role,
+          parts: [{ text: m.content }],
+        }));
+
+        const sysInstruction =
+          systemInstruction ||
+          `You are Sanjeevani Healthcare Assistant, a knowledgeable, empathetic, multilingual medical guide with OPD Booking Skills.
 You communicate natively in Telugu, Hindi, or English based on user preference (${language}).
 Provide clear, structured, compassionate health advice. If patient needs hospital consultation or asks for OPD booking/appointment, utilize the book_opd_appointment tool skill to generate their queue token.`;
 
-      const response = await ai.models.generateContent({
-        model: modelChoice,
-        contents,
-        config: {
-          systemInstruction: sysInstruction,
-          tools: [
-            {
-              functionDeclarations: [
-                {
-                  name: 'book_opd_appointment',
-                  description: 'Book an OPD appointment and generate a digital hospital queue token for the patient based on symptoms or requested department.',
-                  parameters: {
-                    type: Type.OBJECT,
-                    properties: {
-                      department: {
-                        type: Type.STRING,
-                        description: 'The clinical medical department (e.g., General Medicine, Cardiology, Gastroenterology, Neurology, Orthopaedics, Pulmonology, Pediatrics, Dermatology)',
+        const response = await client.models.generateContent({
+          model: modelName,
+          contents,
+          config: {
+            systemInstruction: sysInstruction,
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'book_opd_appointment',
+                    description: 'Book an OPD appointment and generate a digital hospital queue token for the patient based on symptoms or requested department.',
+                    parameters: {
+                      type: Type.OBJECT,
+                      properties: {
+                        department: {
+                          type: Type.STRING,
+                          description: 'The clinical medical department (e.g., General Medicine, Cardiology, Gastroenterology, Neurology, Orthopaedics, Pulmonology, Pediatrics, Dermatology)',
+                        },
+                        urgency: {
+                          type: Type.STRING,
+                          description: 'Estimated urgency: normal or high',
+                        },
                       },
-                      urgency: {
-                        type: Type.STRING,
-                        description: 'Estimated urgency: normal or high',
-                      },
+                      required: ['department'],
                     },
-                    required: ['department'],
                   },
-                },
-              ],
-            },
-          ],
-        },
-      });
+                ],
+              },
+            ],
+          },
+        });
 
-      const functionCall = response.functionCalls?.[0];
-      if (functionCall && functionCall.name === 'book_opd_appointment') {
-        const args = (functionCall.args || {}) as any;
-        const dept = args.department || detectedDept;
-        const replyText =
-          language === 'te'
-            ? `నమస్కారం! మీ లక్షణాల ఆధారంగా **${dept}** విభాగానికి డిజిటల్ ఓపీడీ టోకెన్ విజయవంతంగా కేటాయించబడింది. క్రింద మీ డిజిటల్ టోకెన్ వివరాలు చూడవచ్చు.`
-            : language === 'hi'
-            ? `नमस्ते! आपके लक्षणों के आधार पर **${dept}** विभाग के लिए डिजिटल ओपीडी टोकन सफलतापूर्वक बुक कर दिया गया है। नीचे टोकन विवरण देखें।`
-            : `Hello! Based on your symptoms, a digital OPD queue token for **${dept}** has been generated successfully. Your verified token card is attached below.`;
+        const functionCall = response.functionCalls?.[0];
+        if (functionCall && functionCall.name === 'book_opd_appointment') {
+          const args = (functionCall.args || {}) as any;
+          const dept = args.department || detectedDept;
+          const replyText =
+            language === 'te'
+              ? `నమస్కారం! మీ లక్షణాల ఆధారంగా **${dept}** విభాగానికి డిజిటల్ ఓపీడీ టోకెన్ విజయవంతంగా కేటాయించబడింది. క్రింద మీ డిజిటల్ టోకెన్ వివరాలు చూడవచ్చు.`
+              : language === 'hi'
+              ? `नमस्ते! आपके लक्षणों के आधार पर **${dept}** विभाग के लिए डिजिटल ओपीडी टोकन सफलतापूर्वक बुक कर दिया गया है। नीचे टोकन विवरण देखें।`
+              : `Hello! Based on your symptoms, a digital OPD queue token for **${dept}** has been generated successfully. Your verified token card is attached below.`;
 
-        return {
-          reply: replyText,
-          modelUsed: modelChoice,
-          opdBookingRequested: true,
-          opdDepartment: dept,
-          opdUrgency: args.urgency || 'normal',
-        };
+          return {
+            reply: replyText,
+            modelUsed: modelName,
+            opdBookingRequested: true,
+            opdDepartment: dept,
+            opdUrgency: args.urgency || 'normal',
+          };
+        }
+
+        if (response.text && response.text.trim().length > 0) {
+          return {
+            reply: response.text,
+            modelUsed: modelName,
+            opdBookingRequested: wantsOpd,
+            opdDepartment: detectedDept,
+          };
+        }
+      } catch (err: any) {
+        // Continue to next candidate model if available
       }
-
-      if (response.text && response.text.trim().length > 0) {
-        return {
-          reply: response.text,
-          modelUsed: modelChoice,
-          opdBookingRequested: wantsOpd,
-          opdDepartment: detectedDept,
-        };
-      }
-    } catch (err: any) {
-      console.warn(`Chat with ${modelChoice} failed, trying fallback:`, err);
     }
   }
 
@@ -329,7 +339,8 @@ export async function analyzeSymptoms(
     userLanguageHint?: Language;
   }
 ): Promise<TriageAIResult> {
-  if (ai) {
+  const client = getGeminiClient();
+  if (client) {
     try {
       const parts: any[] = [];
 
@@ -352,61 +363,97 @@ Analyze these symptoms, detect language ('te', 'hi', or 'en'), determine triage 
         throw new Error('No input provided for symptom analysis');
       }
 
-      const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: { parts },
-        config: {
-          systemInstruction: MASTER_SYSTEM_PROMPT,
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              status: { type: Type.STRING },
-              tier: { type: Type.INTEGER, description: '1 for Self-care, 2 for OPD, 3 for Emergency' },
-              translated_symptoms: { type: Type.STRING, description: 'Clinical symptoms translated to English' },
-              detected_language: { type: Type.STRING, description: 'te, hi, or en' },
-              clinical_department: { type: Type.STRING, description: 'Clinical department like Cardiology, General Medicine, etc.' },
-              severity_score: { type: Type.INTEGER, description: '1 to 10 scale' },
-              patient_instructions_native: { type: Type.STRING, description: 'Instructions in the patient language' },
-              safety_warning: { type: Type.STRING },
-              requires_human_assessment: { type: Type.BOOLEAN },
-              original_transcript: { type: Type.STRING },
-            },
-            required: [
-              'status',
-              'tier',
-              'translated_symptoms',
-              'detected_language',
-              'clinical_department',
-              'severity_score',
-              'patient_instructions_native',
-              'requires_human_assessment',
-            ],
-          },
-        },
-      });
+      let responseText: string | undefined;
 
-      const responseText = response.text;
+      for (const modelName of [GEMINI_MODEL, ...FALLBACK_MODELS]) {
+        try {
+          const response = await client.models.generateContent({
+            model: modelName,
+            contents: { parts },
+            config: {
+              systemInstruction: MASTER_SYSTEM_PROMPT,
+              responseMimeType: 'application/json',
+              responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                  status: { type: Type.STRING },
+                  tier: { type: Type.INTEGER, description: '1 for Self-care, 2 for OPD, 3 for Emergency' },
+                  translated_symptoms: { type: Type.STRING, description: 'Clinical symptoms translated to English' },
+                  detected_language: { type: Type.STRING, description: 'te, hi, or en' },
+                  clinical_department: { type: Type.STRING, description: 'Clinical department like Cardiology, General Medicine, etc.' },
+                  severity_score: { type: Type.INTEGER, description: '1 to 10 scale' },
+                  patient_instructions_native: { type: Type.STRING, description: 'Instructions in the patient language' },
+                  safety_warning: { type: Type.STRING },
+                  requires_human_assessment: { type: Type.BOOLEAN },
+                  original_transcript: { type: Type.STRING },
+                },
+                required: [
+                  'status',
+                  'tier',
+                  'translated_symptoms',
+                  'detected_language',
+                  'clinical_department',
+                  'severity_score',
+                  'patient_instructions_native',
+                  'requires_human_assessment',
+                ],
+              },
+            },
+          });
+          if (response.text) {
+            responseText = response.text;
+            break;
+          }
+        } catch (e: any) {
+          // try next fallback model
+        }
+      }
       if (responseText) {
         const parsed = JSON.parse(responseText.trim());
         let tier = parsed.tier as TriageTier;
         if (tier !== 1 && tier !== 2 && tier !== 3) tier = 2;
+
+        // Clinical Safety Check: Emergency red flags MUST escalate to Tier 3
+        const rawLower = (input.textInput || parsed.original_transcript || parsed.translated_symptoms || '').toLowerCase();
+        const hasEmergencyFlags =
+          rawLower.includes('chest pain') ||
+          rawLower.includes('heart attack') ||
+          rawLower.includes('గుండె నొప్పి') ||
+          rawLower.includes('సీనే మే దర్ద్') ||
+          rawLower.includes('सीने में दर्द') ||
+          rawLower.includes('breathless') ||
+          rawLower.includes('unconscious') ||
+          rawLower.includes('stroke') ||
+          rawLower.includes('severe bleeding') ||
+          rawLower.includes('శ్వాస ఆడకపోవడం');
+
+        let severityScore = Math.min(10, Math.max(1, Number(parsed.severity_score) || 5));
+
+        if (hasEmergencyFlags) {
+          tier = 3;
+          severityScore = 10;
+        }
+
+        // Clinical Safety Check: Uncertain symptoms must NOT default to Tier 1 Self-Care
+        if (tier === 1 && (parsed.status === 'unclear' || parsed.requires_human_assessment)) {
+          tier = 2; // Route to physical OPD for in-person evaluation
+        }
 
         return {
           status: 'success',
           tier,
           translated_symptoms: parsed.translated_symptoms || 'Patient reported symptoms requiring evaluation.',
           detected_language: (parsed.detected_language as Language) || input.userLanguageHint || 'en',
-          clinical_department: parsed.clinical_department || 'General Medicine',
-          severity_score: Math.min(10, Math.max(1, Number(parsed.severity_score) || 5)),
+          clinical_department: parsed.clinical_department || (tier === 3 ? 'Emergency' : 'General Medicine'),
+          severity_score: severityScore,
           patient_instructions_native: parsed.patient_instructions_native || 'Please proceed to the assigned department.',
           safety_warning: parsed.safety_warning || '',
           requires_human_assessment: parsed.requires_human_assessment !== false,
           original_transcript: parsed.original_transcript || input.textInput,
         };
       }
-    } catch (error) {
-      console.warn('Gemini API call failed, invoking clinical fallback rule engine:', error);
+    } catch (error: any) {
+      console.warn('Gemini API call failed, invoking clinical fallback rule engine:', error?.message || error);
     }
   }
 
@@ -424,57 +471,69 @@ export async function decodePrescription(
 ): Promise<PrescriptionAIResult> {
   const EXACT_UNCLEAR_WARNING = 'Medicine name is unclear. Please consult a physical pharmacist.';
 
-  if (ai) {
+  const client = getGeminiClient();
+  if (client) {
     try {
-      const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: {
-          parts: [
-            {
-              inlineData: {
-                mimeType,
-                data: imageBase64,
-              },
-            },
-            {
-              text: `Carefully examine this prescription.
+      let responseText: string | undefined;
+
+      for (const modelName of [GEMINI_MODEL, ...FALLBACK_MODELS]) {
+        try {
+          const response = await client.models.generateContent({
+            model: modelName,
+            contents: {
+              parts: [
+                {
+                  inlineData: {
+                    mimeType,
+                    data: imageBase64,
+                  },
+                },
+                {
+                  text: `Carefully examine this prescription.
 Extract medicine names, dosage, frequency, and instructions.
 CRITICAL SAFETY PROTOCOL:
 - Never guess or extrapolate medicine names or dosages.
 - If the handwriting is messy, smudged, ambiguous, or illegible, you MUST set status to "unclear", return an empty medicines array, and set safety_warning exactly to: "${EXACT_UNCLEAR_WARNING}".
 - If readable, translate instructions to the requested language (${preferredLanguage}).`
-            },
-          ],
-        },
-        config: {
-          systemInstruction: MASTER_SYSTEM_PROMPT,
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              status: { type: Type.STRING, description: '"success" or "unclear"' },
-              safety_warning: { type: Type.STRING },
-              medicines: {
-                type: Type.ARRAY,
-                items: {
-                  type: Type.OBJECT,
-                  properties: {
-                    name: { type: Type.STRING },
-                    dosage: { type: Type.STRING },
-                    frequency: { type: Type.STRING },
-                    duration: { type: Type.STRING },
-                    instructions_native: { type: Type.STRING },
-                  },
-                  required: ['name', 'dosage', 'frequency', 'duration', 'instructions_native'],
                 },
+              ],
+            },
+            config: {
+              systemInstruction: MASTER_SYSTEM_PROMPT,
+              responseMimeType: 'application/json',
+              responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                  status: { type: Type.STRING, description: '"success" or "unclear"' },
+                  safety_warning: { type: Type.STRING },
+                  medicines: {
+                    type: Type.ARRAY,
+                    items: {
+                      type: Type.OBJECT,
+                      properties: {
+                        name: { type: Type.STRING },
+                        dosage: { type: Type.STRING },
+                        frequency: { type: Type.STRING },
+                        duration: { type: Type.STRING },
+                        instructions_native: { type: Type.STRING },
+                      },
+                      required: ['name', 'dosage', 'frequency', 'duration', 'instructions_native'],
+                    },
+                  },
+                },
+                required: ['status', 'safety_warning', 'medicines'],
               },
             },
-            required: ['status', 'safety_warning', 'medicines'],
-          },
-        },
-      });
+          });
 
-      const responseText = response.text;
+          if (response.text) {
+            responseText = response.text;
+            break;
+          }
+        } catch (e: any) {
+          // try next fallback model
+        }
+      }
       if (responseText) {
         const parsed = JSON.parse(responseText.trim());
         if (parsed.status === 'unclear' || !parsed.medicines || parsed.medicines.length === 0) {

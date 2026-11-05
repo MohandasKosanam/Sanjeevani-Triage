@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import path from 'path';
@@ -38,6 +39,7 @@ async function startServer() {
       app: 'Sanjeevani Triage',
       time: new Date().toISOString(),
       gemini_available: !!process.env.GEMINI_API_KEY,
+      configured_model: process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
     });
   });
 
