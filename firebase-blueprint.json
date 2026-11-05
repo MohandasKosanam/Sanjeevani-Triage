@@ -1,0 +1,122 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Patient user profile and emergency contact details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user ID" },
+        "name": { "type": "string", "description": "Patient full name" },
+        "phone": { "type": "string", "description": "Contact telephone number" },
+        "email": { "type": "string", "description": "Email address" },
+        "preferred_language": { "type": "string", "enum": ["te", "hi", "en"], "description": "Preferred language" },
+        "role": { "type": "string", "enum": ["PATIENT", "HOSPITAL_STAFF", "ADMIN"], "description": "User access role" },
+        "age": { "type": "number", "description": "Age in years" },
+        "gender": { "type": "string", "description": "Gender" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone", "preferred_language"]
+    },
+    "TriageRecord": {
+      "title": "TriageRecord",
+      "description": "Multimodal symptom analysis and clinical triage record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patient_id": { "type": "string" },
+        "patient_name": { "type": "string" },
+        "patient_phone": { "type": "string" },
+        "detected_language": { "type": "string", "enum": ["te", "hi", "en"] },
+        "original_transcript": { "type": "string" },
+        "translated_symptoms": { "type": "string" },
+        "tier": { "type": "number", "enum": [1, 2, 3] },
+        "severity_score": { "type": "number" },
+        "clinical_department": { "type": "string" },
+        "patient_instructions_native": { "type": "string" },
+        "safety_warning": { "type": "string" },
+        "requires_human_assessment": { "type": "boolean" },
+        "opd_token": { "type": "string" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "patient_id", "tier", "severity_score", "clinical_department", "created_at"]
+    },
+    "OPDToken": {
+      "title": "OPDToken",
+      "description": "Digital hospital outpatient department admission token",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "token_number": { "type": "string" },
+        "patient_id": { "type": "string" },
+        "patient_name": { "type": "string" },
+        "patient_phone": { "type": "string" },
+        "triage_id": { "type": "string" },
+        "hospital_id": { "type": "string" },
+        "hospital_name": { "type": "string" },
+        "department": { "type": "string" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "severity_score": { "type": "number" },
+        "status": { "type": "string", "enum": ["waiting", "in_consultation", "completed", "cancelled"] },
+        "distance_km": { "type": "number" },
+        "estimated_wait_minutes": { "type": "number" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "token_number", "patient_id", "hospital_id", "department", "status", "created_at"]
+    },
+    "SOSEvent": {
+      "title": "SOSEvent",
+      "description": "Priority 0 immediate emergency SOS activation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patient_id": { "type": "string" },
+        "patient_name": { "type": "string" },
+        "patient_phone": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "priority": { "type": "number", "enum": [0] },
+        "status": { "type": "string", "enum": ["received", "dispatched", "contacted", "resolved"] },
+        "ambient_audio_url": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "patient_id", "latitude", "longitude", "priority", "status", "created_at"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message in Gemini healthcare chatbot thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sender": { "type": "string", "enum": ["user", "assistant", "system"] },
+        "content": { "type": "string" },
+        "model_used": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "sender", "content", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "UserProfile" },
+      "description": "Registered patient and hospital user profiles"
+    },
+    "/triage_records/{triageId}": {
+      "schema": { "$ref": "TriageRecord" },
+      "description": "Patient voice and clinical triage records"
+    },
+    "/opd_tokens/{tokenId}": {
+      "schema": { "$ref": "OPDToken" },
+      "description": "Digital hospital OPD tokens"
+    },
+    "/sos_events/{sosId}": {
+      "schema": { "$ref": "SOSEvent" },
+      "description": "Emergency Priority 0 SOS event tickets"
+    },
+    "/chat_messages/{messageId}": {
+      "schema": { "$ref": "ChatMessage" },
+      "description": "Gemini chatbot conversation history"
+    }
+  }
+}

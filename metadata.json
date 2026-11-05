@@ -1,0 +1,12 @@
+{
+  "name": "Sanjeevani Triage",
+  "description": "AI-powered multimodal healthcare triage, voice-to-token OPD, multilingual prescription scanner, 2.5s emergency SOS system, and intelligent hospital queue management.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

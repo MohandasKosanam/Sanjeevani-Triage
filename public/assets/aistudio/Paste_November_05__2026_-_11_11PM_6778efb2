@@ -1,0 +1,2413 @@
+# SANJEEVANI TRIAGE
+## COMPLETE END-TO-END PRODUCT DEVELOPMENT MASTER PROMPT
+### Native Mobile Healthcare Application | Multimodal AI | Intelligent Triage | Emergency Response | Hospital Queue Management
+
+---
+
+# PART 1 — PROJECT IDENTITY AND VISION
+
+## 1.1 Project Name
+
+**Sanjeevani Triage**
+
+## 1.2 Product Description
+
+Sanjeevani Triage is an AI-powered, multimodal healthcare triage and hospital queue management platform designed to improve healthcare accessibility in rural, semi-urban, and urban communities.
+
+The application simplifies healthcare access by replacing complicated form-based patient interactions with voice-based symptom collection, multilingual AI assistance, prescription scanning, intelligent patient classification, geographical hospital allocation, and emergency SOS assistance.
+
+The platform connects patients with healthcare facilities through an intelligent routing system and provides hospital administrators with a priority-based patient management dashboard.
+
+## 1.3 Core Problem
+
+Patients frequently encounter the following problems:
+
+- Long waiting times at hospitals.
+- Difficulty explaining symptoms to hospital receptionists.
+- Language barriers between patients and healthcare professionals.
+- Complicated hospital registration processes.
+- Difficulty understanding handwritten prescriptions.
+- Lack of organized digital medical records.
+- Difficulty identifying appropriate hospitals.
+- Delayed identification of emergency patients.
+- Inefficient patient queue management.
+
+## 1.4 Our Solution
+
+Sanjeevani Triage addresses these problems through five core capabilities:
+
+1. **Voice-to-Token OPD:** Patients describe their symptoms using natural speech and receive a digital OPD token through AI-assisted triage.
+2. **Smart Rx Decoder:** Patients photograph prescriptions and receive explanations of reliably readable medicine instructions in their preferred language.
+3. **Three-Tier Intelligent Triage:** Patients are classified into self-care, OPD, and emergency pathways.
+4. **2.5-Second SOS Emergency System:** Patients can activate an emergency alert through a deliberate press-and-hold interaction.
+5. **Hospital Admin Dashboard:** Healthcare staff receive dynamically prioritized patient records rather than relying exclusively on first-in-first-out queues.
+
+## 1.5 Product Philosophy
+
+**Zero-UI Healthcare Interaction**
+
+The patient application must minimize complicated navigation and text-heavy forms.
+
+Primary interactions should use:
+
+- Voice.
+- Camera.
+- Large touch controls.
+- Native-language communication.
+- Location detection.
+- Simple visual instructions.
+
+The application must be accessible to people with limited digital literacy.
+
+---
+
+# PART 2 — STRICT ARCHITECTURAL REQUIREMENTS
+
+## 2.1 NON-NEGOTIABLE: NATIVE MOBILE APPLICATION
+
+The patient-facing application MUST be a genuine native mobile application.
+
+Use React Native with Expo and TypeScript.
+
+The application must be installable on Android and iOS.
+
+STRICTLY PROHIBITED:
+
+- Next.js as the patient frontend.
+- React DOM.
+- HTML-based patient screens.
+- Browser-based mobile interfaces.
+- Progressive Web Applications.
+- WebView wrappers.
+- Websites packaged inside Android applications.
+- Simulated native interfaces using browser components.
+
+Every patient-facing screen must use React Native components and native device functionality.
+
+The hospital administrator dashboard is a separate web application and may use Next.js.
+
+## 2.2 Three-Application Architecture
+
+Build the complete platform as three independently deployable applications sharing one backend.
+
+**Application A — Patient Mobile App**
+
+Technology:
+- React Native.
+- Expo.
+- TypeScript.
+- Expo Router.
+- NativeWind or React Native StyleSheet.
+- Lucide React Native.
+
+Targets:
+- Android.
+- iOS.
+
+**Application B — Backend Orchestration Server**
+
+Technology:
+- Node.js.
+- Express.js.
+- TypeScript.
+- REST APIs.
+- Google Gemini API.
+- PostgreSQL.
+- Persistent object storage.
+- WebSocket or equivalent real-time communication.
+
+**Application C — Hospital Admin Dashboard**
+
+Technology:
+- Next.js App Router.
+- React.
+- TypeScript.
+- Tailwind CSS.
+- Lucide React.
+- Recharts, where useful.
+
+Target:
+- Desktop browsers.
+- Tablets.
+
+## 2.3 System Architecture
+
+Implement the following architecture:
+
+PATIENT MOBILE APPLICATION
+↓
+Native Device Services
+↓
+Backend API Gateway
+↓
+Authentication and Request Validation
+↓
+AI Triage Orchestration
+↓
+Gemini Multimodal Engine
+↓
+Clinical Routing Validation
+↓
+Hospital Allocation Engine
+↓
+PostgreSQL Database
+↓
+Real-Time Patient Queue
+↓
+HOSPITAL ADMIN DASHBOARD
+
+The SOS system must have an independent emergency pathway that does not depend on Gemini processing.
+
+Architecture principles:
+
+- Secure server-side AI communication.
+- Independent mobile and admin clients.
+- Centralized backend business logic.
+- Persistent patient and token records.
+- Real-time or near-real-time queue updates.
+- Replaceable AI model provider.
+- Replaceable storage provider.
+- Modular service architecture.
+
+---
+
+# PART 3 — TECHNOLOGY STACK
+
+## 3.1 Patient Mobile Application
+
+Use the following technologies:
+
+| Requirement | Technology |
+|---|---|
+| Mobile framework | React Native |
+| Development framework | Expo |
+| Language | TypeScript |
+| Navigation | Expo Router |
+| Styling | NativeWind / StyleSheet |
+| Icons | Lucide React Native |
+| Camera | expo-camera |
+| Audio recording | expo-audio |
+| Location | expo-location |
+| Haptic feedback | expo-haptics |
+| Notifications | expo-notifications |
+| Secure storage | expo-secure-store |
+| File handling | expo-file-system |
+| Network communication | Fetch / Axios |
+| Server state | TanStack Query |
+| Client state | Zustand |
+| Form validation | Zod |
+
+Use compatible package versions for the selected Expo SDK.
+
+Do not blindly install outdated packages.
+
+## 3.2 Backend
+
+- Node.js.
+- Express.js.
+- TypeScript.
+- Google Gemini API SDK.
+- PostgreSQL.
+- Prisma ORM.
+- Zod validation.
+- JWT or secure session-based authentication.
+- WebSockets or Server-Sent Events.
+- Object storage for audio and image uploads.
+
+## 3.3 Admin Dashboard
+
+- Next.js App Router.
+- React.
+- TypeScript.
+- Tailwind CSS.
+- Lucide React.
+- Recharts.
+- TanStack Query.
+
+## 3.4 AI Engine
+
+Use Google's Gemini multimodal models for:
+
+- Audio understanding.
+- Image understanding.
+- Telugu language interpretation.
+- Hindi language interpretation.
+- English language interpretation.
+- Symptom extraction.
+- Structured triage recommendations.
+- Prescription document interpretation.
+
+Original target: Gemini 1.5 Pro.
+
+IMPORTANT: Verify actual model availability before implementation. If the original model is unavailable, configure a currently supported Gemini multimodal model with equivalent required capabilities.
+
+Do not hardcode an unavailable model ID throughout the codebase.
+
+Use a centralized model configuration.
+
+## 3.5 Initial Setup
+
+Create the monorepo:
+
+```bash
+mkdir sanjeevani-triage
+cd sanjeevani-triage
+
+mkdir mobile backend admin docs
+```
+
+Initialize the mobile application:
+
+```bash
+cd mobile
+
+npx create-expo-app@latest . --template tabs
+```
+
+Install appropriate Expo-native packages:
+
+```bash
+npx expo install expo-camera expo-audio expo-location expo-haptics expo-notifications expo-secure-store expo-file-system expo-device expo-constants
+```
+
+Install shared dependencies:
+
+```bash
+npm install lucide-react-native zustand @tanstack/react-query zod
+```
+
+Initialize the backend:
+
+```bash
+cd ../backend
+
+npm init -y
+
+npm install express cors helmet dotenv
+npm install @google/genai
+npm install prisma @prisma/client
+npm install zod jsonwebtoken bcryptjs
+npm install multer
+npm install socket.io
+```
+
+Install development dependencies:
+
+```bash
+npm install -D typescript tsx @types/node @types/express
+npm install -D @types/cors @types/multer
+```
+
+Initialize the admin dashboard:
+
+```bash
+cd ../admin
+
+npx create-next-app@latest . --typescript --tailwind --app
+```
+
+Adjust packages as required by the selected SDK versions.
+
+---
+
+# PART 4 — COMPLETE PROJECT DIRECTORY STRUCTURE
+
+Maintain a clean monorepo.
+
+```text
+sanjeevani-triage/
+│
+├── mobile/
+│   ├── app/
+│   │   ├── _layout.tsx
+│   │   ├── index.tsx
+│   │   │
+│   │   ├── (auth)/
+│   │   │   ├── welcome.tsx
+│   │   │   ├── login.tsx
+│   │   │   ├── register.tsx
+│   │   │   └── language.tsx
+│   │   │
+│   │   ├── (tabs)/
+│   │   │   ├── _layout.tsx
+│   │   │   ├── home.tsx
+│   │   │   ├── records.tsx
+│   │   │   ├── tokens.tsx
+│   │   │   └── profile.tsx
+│   │   │
+│   │   ├── triage/
+│   │   │   ├── index.tsx
+│   │   │   ├── recording.tsx
+│   │   │   └── result.tsx
+│   │   │
+│   │   ├── prescription/
+│   │   │   ├── index.tsx
+│   │   │   ├── camera.tsx
+│   │   │   └── result.tsx
+│   │   │
+│   │   ├── hospital/
+│   │   │   ├── recommendation.tsx
+│   │   │   └── details.tsx
+│   │   │
+│   │   ├── emergency/
+│   │   │   ├── index.tsx
+│   │   │   └── status.tsx
+│   │   │
+│   │   ├── profile/
+│   │   │   ├── settings.tsx
+│   │   │   ├── medical-info.tsx
+│   │   │   └── privacy.tsx
+│   │   │
+│   │   └── history/
+│   │       └── index.tsx
+│   │
+│   ├── components/
+│   │   ├── common/
+│   │   ├── navigation/
+│   │   ├── patient/
+│   │   ├── triage/
+│   │   ├── prescription/
+│   │   ├── hospital/
+│   │   ├── emergency/
+│   │   └── health/
+│   │
+│   ├── hooks/
+│   ├── services/
+│   ├── store/
+│   ├── types/
+│   ├── constants/
+│   ├── assets/
+│   │   ├── images/
+│   │   ├── icons/
+│   │   └── audio/
+│   │
+│   ├── app.json
+│   └── package.json
+│
+├── backend/
+│   ├── src/
+│   │   ├── server.ts
+│   │   ├── app.ts
+│   │   │
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── middleware/
+│   │   ├── validators/
+│   │   ├── models/
+│   │   ├── database/
+│   │   ├── repositories/
+│   │   ├── ai/
+│   │   ├── storage/
+│   │   ├── sockets/
+│   │   ├── config/
+│   │   └── utils/
+│   │
+│   ├── prisma/
+│   │   └── schema.prisma
+│   │
+│   ├── tests/
+│   ├── uploads/
+│   ├── .env.example
+│   └── package.json
+│
+├── admin/
+│   ├── app/
+│   │   ├── login/
+│   │   ├── dashboard/
+│   │   ├── patients/
+│   │   ├── emergencies/
+│   │   ├── queue/
+│   │   ├── analytics/
+│   │   └── settings/
+│   │
+│   ├── components/
+│   ├── services/
+│   ├── hooks/
+│   └── package.json
+│
+├── docs/
+│   ├── architecture.md
+│   ├── database.md
+│   ├── api-documentation.md
+│   ├── setup.md
+│   ├── deployment.md
+│   └── testing.md
+│
+├── package.json
+└── README.md
+```
+
+You may refine this structure when necessary, but maintain clear architectural separation.
+
+---
+
+# PART 5 — COMPLETE MOBILE APPLICATION UI/UX
+
+## 5.1 Design Philosophy
+
+Design a premium healthcare application with an approachable, trustworthy, minimalist appearance.
+
+Visual direction:
+
+- Swiss minimalist design.
+- Modern healthcare technology.
+- White and off-white backgrounds.
+- Deep navy text.
+- Teal-green primary accent.
+- Soft blue information cards.
+- Red emergency actions.
+- Rounded surfaces.
+- Subtle shadows.
+- Carefully controlled glassmorphism.
+- Smooth native animations.
+
+Suggested design tokens:
+
+```typescript
+export const colors = {
+  background: "#F8F9FA",
+  surface: "#FFFFFF",
+  primary: "#0D9488",
+  primaryDark: "#0F766E",
+  secondary: "#1E3A5F",
+  text: "#1F2937",
+  muted: "#64748B",
+  border: "#E2E8F0",
+  danger: "#DC2626",
+  warning: "#F59E0B",
+  success: "#16A34A"
+};
+```
+
+Use consistent spacing, typography, icon sizes, and border radii.
+
+Do not overload the application with excessive cards or decorative graphics.
+
+## 5.2 Onboarding
+
+Create a short onboarding experience.
+
+Screens:
+
+1. Welcome to Sanjeevani Triage.
+2. Select preferred language.
+3. Explain voice-based healthcare access.
+4. Explain prescription scanning.
+5. Explain emergency SOS.
+6. Privacy and permissions explanation.
+7. Login or registration.
+
+Avoid requesting all permissions immediately.
+
+Request camera, microphone, location, and notification permissions when their respective features are first used.
+
+## 5.3 Authentication
+
+Implement:
+
+- Patient registration.
+- Patient login.
+- Secure session handling.
+- Logout.
+- Profile management.
+- Preferred language.
+- Basic medical information.
+
+Collect only necessary patient information.
+
+Support a demo mode with clearly labelled sample data for hackathon demonstrations.
+
+## 5.4 Native Navigation
+
+Implement Expo Router navigation.
+
+Bottom navigation:
+
+- Home.
+- Health Records.
+- Central SOS control.
+- OPD Tokens.
+- Profile.
+
+The SOS control should be visually prominent and centrally positioned.
+
+Implement an accessible side drawer or native navigation panel for:
+
+- Search.
+- Previous triage records.
+- Medical history.
+- Prescriptions.
+- Settings.
+- Language.
+- Help.
+- Logout.
+
+Use native navigation transitions and safe-area handling.
+
+## 5.5 Home Screen
+
+The home screen must contain:
+
+1. Patient greeting.
+2. Patient profile avatar.
+3. Daily Health Insight.
+4. Main Voice Triage action.
+5. Prescription Scanner action.
+6. Latest OPD token.
+7. Medical records shortcut.
+8. Recent consultation history.
+9. Bottom navigation.
+10. Prominent SOS control.
+
+The home screen must clearly communicate the primary action:
+
+"Tell us how you're feeling."
+
+Primary action: Speak Symptoms.
+
+Secondary action: Scan Prescription.
+
+## 5.6 Daily Health Insight
+
+For the initial prototype, use mocked Health Connect data.
+
+Example:
+
+```json
+{
+  "metrics": {
+    "steps": 4200,
+    "sleep_duration_hours": 5.2,
+    "avg_hr_bpm": 78
+  },
+  "context": {
+    "location": "Visakhapatnam",
+    "weather": "Hot and Humid, 32°C"
+  }
+}
+```
+
+Display:
+
+- Daily steps.
+- Sleep duration.
+- Average heart rate.
+- Relevant non-diagnostic health observations.
+
+Clearly label simulated metrics.
+
+Do not claim the application has actually accessed Google Health Connect.
+
+A future native Android Health Connect integration may be implemented separately using the appropriate Android APIs and permissions.
+
+Do not create unsupported medical diagnoses from this data.
+
+---
+
+# PART 6 — CORE FEATURE 1: VOICE-TO-TOKEN OPD
+
+## 6.1 Purpose
+
+Allow patients to describe their symptoms through natural speech without completing complicated medical forms.
+
+This is the central interaction of Sanjeevani Triage.
+
+## 6.2 UI
+
+Create a large circular microphone button.
+
+Display:
+
+- Microphone icon.
+- "Hold to speak symptoms."
+- Recording indicator.
+- Animated audio waveform.
+- Recording duration.
+- Cancel control.
+- Submit/processing state.
+
+Recording states:
+
+```text
+IDLE
+REQUESTING_PERMISSION
+RECORDING
+UPLOADING
+PROCESSING
+SUCCESS
+FAILED
+CANCELLED
+```
+
+## 6.3 Native Audio Recording
+
+Use Expo Audio.
+
+Implement:
+
+- Microphone permission.
+- Native audio recording.
+- Audio duration.
+- Start recording.
+- Stop recording.
+- Cancel recording.
+- File validation.
+- Upload.
+- Cleanup.
+
+Do not use browser MediaRecorder APIs.
+
+Use a robust gesture implementation that handles:
+
+- Short taps.
+- Long presses.
+- Touch cancellation.
+- Application backgrounding.
+- Audio interruptions.
+- Permission denial.
+
+## 6.4 Multilingual Processing
+
+Support:
+
+- Telugu.
+- English.
+- Hindi.
+
+Example patient input:
+
+"My son's stomach is hurting a lot."
+
+The AI must:
+
+1. Understand the recorded audio.
+2. Identify the language.
+3. Extract symptoms.
+4. Identify symptom duration where available.
+5. Extract relevant details.
+6. Identify concerning warning signs.
+7. Translate symptoms into English.
+8. Determine the appropriate triage pathway.
+9. Generate patient instructions in the detected language.
+10. Return structured JSON.
+
+Do not invent missing patient information.
+
+If the patient description is insufficient, return an unclear result and request clarification or human assessment.
+
+## 6.5 Backend Audio Upload
+
+Send the recorded file using multipart/form-data.
+
+Endpoint:
+
+```text
+POST /api/v1/triage
+```
+
+Fields:
+
+```text
+audio
+patient_id
+language
+lat
+lng
+```
+
+## 6.6 OPD Token Generation
+
+For valid Tier 2 cases:
+
+- Generate a unique token on the backend.
+- Store the triage record.
+- Assign a suitable hospital.
+- Assign the clinical department.
+- Return token information.
+- Display a digital OPD token.
+
+Token example:
+
+```json
+{
+  "token_number": "OPD-102",
+  "department": "General Medicine",
+  "hospital_name": "Apollo Hospitals, Ramnagar",
+  "status": "waiting",
+  "priority": "medium"
+}
+```
+
+The backend must generate token numbers using a concurrency-safe process.
+
+The patient must be able to view previous tokens and current status.
+
+---
+
+# PART 7 — CORE FEATURE 2: SMART RX DECODER
+
+## 7.1 Purpose
+
+Allow patients to photograph physical medical prescriptions and understand reliably readable medicine instructions in their preferred language.
+
+## 7.2 Native Camera Interface
+
+Use Expo Camera.
+
+Requirements:
+
+- Native camera permission.
+- Rear camera by default.
+- Live preview.
+- Capture button.
+- Image preview.
+- Retake option.
+- Upload progress.
+- Processing state.
+- Result screen.
+
+## 7.3 AI Extraction
+
+Gemini should attempt to extract:
+
+- Medicine name.
+- Dosage.
+- Frequency.
+- Duration.
+- Administration instructions.
+- Other clearly visible prescription information.
+
+Output:
+
+```json
+{
+  "status": "success",
+  "medicines": [
+    {
+      "name": "Medicine name",
+      "dosage": "Extracted dosage",
+      "frequency": "Extracted frequency",
+      "duration": "Extracted duration",
+      "instructions_native": "Translated instructions"
+    }
+  ],
+  "safety_warning": ""
+}
+```
+
+## 7.4 Prescription Safety Protocol
+
+This is a strict safety requirement.
+
+The system must never guess:
+
+- Medicine names.
+- Dosages.
+- Frequency.
+- Duration.
+- Administration instructions.
+
+If the handwriting is unclear, the image is inadequate, or medicine identity cannot be established reliably, stop extraction.
+
+Return:
+
+```json
+{
+  "status": "unclear",
+  "medicines": [],
+  "safety_warning": "Medicine name is unclear. Please consult a physical pharmacist."
+}
+```
+
+Do not substitute similar-looking medicines.
+
+Do not recommend alternative medicines.
+
+Do not independently prescribe or modify a doctor's instructions.
+
+Display extracted results as an interpretation that must be confirmed with a qualified pharmacist or prescribing clinician.
+
+---
+
+# PART 8 — CORE FEATURE 3: THREE-TIER INTELLIGENT TRIAGE
+
+## 8.1 Overview
+
+Implement three healthcare routing tiers.
+
+Tier classification must be validated through backend business logic and clinical safety rules.
+
+The AI must assist with information extraction and routing suggestions, not independently diagnose diseases.
+
+## 8.2 TIER 1 — SELF-CARE
+
+Examples:
+
+- Mild cold.
+- Minor non-urgent complaints.
+- Mild discomfort without warning signs.
+
+Behaviour:
+
+- Provide conservative general self-care information.
+- Communicate in the patient's language.
+- Display a disclaimer.
+- Explain warning signs.
+- Recommend professional care when appropriate.
+- Do not generate an OPD token by default.
+- Do not add to the hospital queue.
+
+Do not automatically classify unclear or incomplete symptoms as Tier 1.
+
+## 8.3 TIER 2 — OPD
+
+Examples:
+
+- Persistent fever.
+- Significant abdominal discomfort.
+- Conditions requiring a clinical examination.
+- Non-immediate complaints requiring medical assessment.
+
+Behaviour:
+
+1. Extract symptoms.
+2. Determine the relevant clinical department.
+3. Retrieve registered hospitals.
+4. Match specialties.
+5. Calculate geographical distance.
+6. Select the nearest suitable registered hospital.
+7. Generate OPD token.
+8. Save patient record.
+9. Send patient record to dashboard.
+10. Display allocation result.
+
+## 8.4 TIER 3 — EMERGENCY
+
+Examples:
+
+- Severe breathing difficulty.
+- Suspected stroke.
+- Unconsciousness.
+- Severe chest pain.
+- Other life-threatening warning signs.
+
+Behaviour:
+
+- Escalate immediately.
+- Set severity score to 10.
+- Display emergency instructions.
+- Encourage immediate contact with emergency services.
+- Create a Priority 0 event.
+- Notify the hospital dashboard.
+- Avoid waiting for lengthy AI processing.
+
+Do not make emergency routing dependent on the completion of unrelated AI operations.
+
+## 8.5 Severity Score
+
+Use a scale of 1–10.
+
+Suggested interpretation:
+
+| Score | Interpretation |
+|---|---|
+| 1–3 | Low |
+| 4–6 | Moderate |
+| 7–8 | High |
+| 9–10 | Critical |
+
+This score is an application prioritization mechanism, not a validated medical scoring instrument.
+
+Critical warning signs must override numerical scores.
+
+---
+
+# PART 9 — CORE FEATURE 4: HOSPITAL ALLOCATION ENGINE
+
+## 9.1 Location Access
+
+Use Expo Location.
+
+Requirements:
+
+- Request location permission.
+- Obtain GPS coordinates.
+- Handle denied permission.
+- Handle unavailable GPS.
+- Provide manual location fallback.
+- Send location to backend securely.
+
+## 9.2 Hospital Registry
+
+Create a JSON seed dataset.
+
+```json
+[
+  {
+    "hospital_id": "HOSP-VZG-001",
+    "hospital_name": "Apollo Hospitals, Ramnagar",
+    "coordinates": {
+      "lat": 17.7124,
+      "lng": 83.3156
+    },
+    "specialties": [
+      "Cardiology",
+      "Oncology",
+      "Neurosciences",
+      "Gastroenterology",
+      "Orthopaedics"
+    ]
+  },
+  {
+    "hospital_id": "HOSP-VZG-002",
+    "hospital_name": "CARE Hospitals, Ramnagar",
+    "coordinates": {
+      "lat": 17.7138,
+      "lng": 83.3142
+    },
+    "specialties": [
+      "Cardiology",
+      "Neurology",
+      "Pulmonology",
+      "Critical Care",
+      "General Surgery"
+    ]
+  },
+  {
+    "hospital_id": "HOSP-VZG-003",
+    "hospital_name": "Medicover Hospital, Maharani Peta",
+    "coordinates": {
+      "lat": 17.7085,
+      "lng": 83.3005
+    },
+    "specialties": [
+      "Internal Medicine",
+      "Gynecology",
+      "Pediatrics",
+      "General Medicine"
+    ]
+  },
+  {
+    "hospital_id": "HOSP-VZG-004",
+    "hospital_name": "Icon Krishi Hospitals (KIMS), Sheela Nagar",
+    "coordinates": {
+      "lat": 17.6973,
+      "lng": 83.1979
+    },
+    "specialties": [
+      "Trauma",
+      "Orthopaedics",
+      "Urology",
+      "Critical Care"
+    ]
+  }
+]
+```
+
+Treat the supplied registry as a prototype dataset. Do not claim that hospital availability, acceptance, or emergency capacity has been verified.
+
+## 9.3 Distance Calculation
+
+Implement Haversine distance in the backend.
+
+```typescript
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371;
+
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  const c = 2 * Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(1 - a)
+  );
+
+  return R * c;
+}
+```
+
+## 9.4 Allocation Algorithm
+
+1. Receive patient coordinates.
+2. Receive the required clinical department.
+3. Retrieve the hospital registry.
+4. Match registered specialties.
+5. Exclude unsuitable hospitals.
+6. Calculate straight-line distance.
+7. Sort eligible hospitals.
+8. Select the nearest suitable hospital.
+9. Return the selected hospital and distance.
+
+If no appropriate hospital is available, return a safe fallback rather than assigning an unrelated hospital.
+
+Clearly label distance as geographical straight-line distance, not road distance.
+
+---
+
+# PART 10 — CORE FEATURE 5: 2.5-SECOND SOS EMERGENCY SYSTEM
+
+## 10.1 Purpose
+
+Implement an immediately accessible emergency control.
+
+The patient must be able to trigger an SOS event without using voice recognition or waiting for Gemini.
+
+## 10.2 Native SOS Interface
+
+Use a large circular red Pressable control in the bottom navigation area.
+
+Features:
+
+- Red emergency button.
+- Hold progress ring.
+- Haptic feedback.
+- Clear activation instruction.
+- Activation countdown.
+- Emergency confirmation.
+- Live SOS status.
+
+## 10.3 Exact Timing
+
+The sequence must preserve these values:
+
+| Stage | Duration |
+|---|---:|
+| Intentional SOS hold | 2.5 seconds |
+| Local siren | 10 seconds |
+| Ambient recording | 20 seconds |
+
+The backend SOS event must be submitted immediately after the 2.5-second hold succeeds.
+
+Do not wait 30 additional seconds before notifying the dashboard.
+
+## 10.4 State Machine
+
+```typescript
+type SOSState =
+  | "IDLE"
+  | "HOLDING"
+  | "SIREN"
+  | "RECORDING"
+  | "UPLOADING"
+  | "DISPATCHED"
+  | "FAILED";
+```
+
+## 10.5 Activation Logic
+
+Implement:
+
+- Press starts hold.
+- Display progress.
+- Release before 2.5 seconds cancels activation.
+- At 2.5 seconds activate SOS.
+- Trigger haptic feedback.
+- Capture GPS.
+- Send Priority 0 event.
+- Start local siren.
+- Record ambient audio.
+- Upload recording.
+- Update SOS ticket.
+
+Use native APIs:
+
+- React Native Pressable.
+- Expo Haptics.
+- Expo Location.
+- Expo Audio.
+- Native bundled audio asset.
+
+Do not use:
+
+- navigator.vibrate.
+- navigator.geolocation.
+- Web Audio API.
+- MediaRecorder.
+- Browser event handlers.
+
+## 10.6 Emergency API
+
+```text
+POST /api/v1/sos-dispatch
+```
+
+Payload:
+
+```json
+{
+  "lat": 17.7124,
+  "lng": 83.3156,
+  "priority": 0
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "sos_id": "SOS-001",
+  "status": "received",
+  "priority": 0
+}
+```
+
+Use server-generated IDs.
+
+The endpoint must:
+
+- Validate coordinates.
+- Authenticate the patient.
+- Create a unique emergency record.
+- Set Priority 0.
+- Persist the event.
+- Trigger dashboard updates.
+- Return a valid SOS ticket ID.
+
+Implement an idempotency mechanism to prevent duplicate emergency records from repeated requests.
+
+## 10.7 Local Siren
+
+Use a locally bundled audio file.
+
+Requirements:
+
+- Ten-second playback.
+- Audio cleanup.
+- Handle interruption.
+- Respect platform audio rules.
+- Provide a visual fallback when audio is unavailable.
+
+The siren is a local device alert, not proof that emergency services have been contacted.
+
+## 10.8 Ambient Audio
+
+Record for 20 seconds after the siren.
+
+Requirements:
+
+- Request microphone permission.
+- Explain recording purpose.
+- Record audio.
+- Upload through a separate authenticated endpoint.
+- Associate audio with the SOS ticket.
+- Store the file securely.
+- Update SOS record.
+- Release audio resources.
+
+If permission is denied or upload fails, preserve the SOS event and communicate the failure. Never cancel an already submitted emergency event because audio recording failed.
+
+## 10.9 Real Emergency Dispatch
+
+For the prototype, implement a demo dispatch event and clearly label it as simulated.
+
+Do not claim an ambulance has been dispatched without an authorized, functioning emergency-service integration.
+
+Optional Twilio integration may support authorized SMS or callback notifications, but does not itself dispatch ambulances.
+
+---
+
+# PART 11 — GEMINI MULTIMODAL AI ENGINE
+
+## 11.1 Model Architecture
+
+Create a centralized Gemini provider.
+
+The backend must handle:
+
+- Audio input.
+- Prescription images.
+- Symptom extraction.
+- Language detection.
+- Structured output.
+- Error handling.
+- Model selection.
+
+Use the currently supported Google Gen AI SDK.
+
+Keep the model ID configurable.
+
+## 11.2 AI Processing Flow
+
+Audio/Image Upload
+↓
+File Validation
+↓
+Gemini Multimodal Processing
+↓
+Structured JSON Response
+↓
+Schema Validation
+↓
+Clinical Safety Validation
+↓
+Hospital Allocation
+↓
+Database Persistence
+↓
+Patient Response
+
+The AI must never directly control database writes or assign arbitrary hospital IDs.
+
+## 11.3 Structured Triage Response
+
+Use a schema similar to:
+
+```json
+{
+  "status": "success",
+  "tier": 2,
+  "translated_symptoms": "Persistent abdominal discomfort",
+  "detected_language": "te",
+  "clinical_department": "General Medicine",
+  "severity_score": 6,
+  "patient_instructions_native": "Patient instructions",
+  "safety_warning": "",
+  "requires_human_assessment": true
+}
+```
+
+Hospital allocation should be completed by the backend after validating the AI response.
+
+## 11.4 Master System Prompt
+
+Use the following AI system instruction:
+
+"You are Sanjeevani Triage, an AI-assisted multimodal healthcare routing assistant.
+
+Your job is to understand patient-reported symptoms, interpret medical documents when sufficiently legible, and provide structured information for a healthcare routing system.
+
+You are not a doctor and must not independently diagnose diseases.
+
+LANGUAGE:
+Support Telugu, Hindi, and English.
+Detect the language of patient audio.
+Understand natural speech and regional variations.
+Translate symptoms into English for hospital staff.
+Provide patient-facing communication in the detected language.
+
+SYMPTOM EXTRACTION:
+Extract only information supported by patient input.
+Do not invent symptoms, medical history, or duration.
+Identify missing information and uncertainty.
+Flag potential emergency warning signs.
+
+TIER 1:
+Recommend conservative self-care guidance only for clearly mild symptoms without warning signs.
+Include a medical disclaimer and escalation instructions.
+
+TIER 2:
+Identify the relevant clinical department and recommend clinical evaluation.
+Do not independently assign a hospital.
+
+TIER 3:
+Identify potentially life-threatening symptoms.
+Set severity score to 10.
+Recommend immediate emergency assistance.
+Do not delay emergency instructions.
+
+PRESCRIPTION SCANNING:
+Extract only clearly legible medicine names, dosage, frequency, and duration.
+Never guess missing information.
+Never invent medication instructions.
+If handwriting is ambiguous or unclear, abort extraction.
+
+Return the exact warning:
+Medicine name is unclear. Please consult a physical pharmacist.
+
+HOSPITAL ROUTING:
+Do not invent hospital IDs, hospital names, specialties, availability, or distances.
+The backend will perform geographical calculations and final hospital allocation.
+
+OUTPUT:
+Return valid JSON matching the supplied response schema.
+Never provide unsupported medical claims.
+Never claim that an ambulance or medical professional has been dispatched unless the backend confirms the relevant integration."
+
+## 11.5 AI Provider Reliability
+
+Implement:
+
+- API timeout.
+- Retry with bounded attempts.
+- Rate limiting.
+- Error classification.
+- Model fallback configuration.
+- Response schema validation.
+- Logging without exposing patient data.
+- Safe handling of malformed AI output.
+
+If Gemini is unavailable, provide an appropriate fallback and emergency instructions.
+
+Never silently downgrade an emergency to Tier 1 because the AI failed.
+
+---
+
+# PART 12 — BACKEND AND DATABASE ARCHITECTURE
+
+## 12.1 Backend Design
+
+Build a modular Express application.
+
+Separate:
+
+- Routes.
+- Controllers.
+- Services.
+- Repositories.
+- AI provider.
+- Authentication.
+- Validation.
+- Database access.
+- File storage.
+- Real-time events.
+
+Do not place all business logic in a single server file.
+
+## 12.2 PostgreSQL Database
+
+Use PostgreSQL with Prisma ORM.
+
+Create the following entities:
+
+### Users
+
+- id.
+- name.
+- phone.
+- email, optional.
+- password hash or external identity.
+- preferred language.
+- role.
+- created_at.
+- updated_at.
+
+### Patient Profiles
+
+- id.
+- user_id.
+- date of birth, where necessary.
+- emergency contact.
+- relevant patient-provided medical information.
+- created_at.
+
+### Triage Records
+
+- id.
+- patient_id.
+- detected_language.
+- translated_symptoms.
+- tier.
+- severity_score.
+- clinical_department.
+- status.
+- safety_warning.
+- created_at.
+
+### Hospitals
+
+- id.
+- hospital_name.
+- address.
+- latitude.
+- longitude.
+- specialties.
+- registration status.
+- created_at.
+
+### OPD Tokens
+
+- id.
+- patient_id.
+- triage_id.
+- hospital_id.
+- token_number.
+- department.
+- status.
+- created_at.
+
+### SOS Events
+
+- id.
+- patient_id.
+- latitude.
+- longitude.
+- priority.
+- status.
+- ambient_audio_url.
+- created_at.
+
+### Prescriptions
+
+- id.
+- patient_id.
+- image_url.
+- extraction_status.
+- extracted_data.
+- safety_warning.
+- created_at.
+
+### Audit Logs
+
+- id.
+- actor_id.
+- action.
+- resource_type.
+- resource_id.
+- timestamp.
+
+Implement foreign keys, indexes, unique constraints, and appropriate access controls.
+
+Use database transactions for token generation and important queue changes.
+
+## 12.3 Data Storage
+
+Do not use serverless local JSON files as permanent production storage.
+
+Use:
+
+- PostgreSQL for structured records.
+- Object storage for audio and image files.
+- Secure signed URLs for authorized media access.
+- Appropriate retention and deletion policies.
+
+For local development, provide seed data.
+
+---
+
+# PART 13 — COMPLETE API SPECIFICATION
+
+Create versioned API routes.
+
+Base URL:
+
+```text
+/api/v1
+```
+
+### Authentication
+
+```text
+POST /auth/register
+POST /auth/login
+POST /auth/logout
+GET  /auth/me
+```
+
+### Patient
+
+```text
+GET   /patients/me
+PATCH /patients/me
+GET   /patients/me/history
+```
+
+### Triage
+
+```text
+POST /triage
+GET  /triage/:id
+GET  /triage/history
+```
+
+### Prescription
+
+```text
+POST /prescriptions/scan
+GET  /prescriptions
+GET  /prescriptions/:id
+```
+
+### Hospitals
+
+```text
+GET /hospitals
+GET /hospitals/:id
+POST /hospitals/recommend
+```
+
+### OPD Tokens
+
+```text
+POST  /tokens
+GET   /tokens
+GET   /tokens/:id
+PATCH /tokens/:id/status
+```
+
+### SOS
+
+```text
+POST /sos-dispatch
+POST /sos/:id/context
+GET  /sos/:id
+GET  /sos/history
+```
+
+### Admin
+
+```text
+GET   /admin/dashboard
+GET   /admin/patients
+GET   /admin/queue
+GET   /admin/emergencies
+PATCH /admin/queue/:id/status
+POST  /admin/patients/:id/callback
+```
+
+### Health Insights
+
+```text
+POST /health-insights
+GET  /health-insights
+```
+
+All endpoints must have authentication and role-based authorization appropriate to their operation.
+
+---
+
+# PART 14 — HOSPITAL ADMIN DASHBOARD
+
+## 14.1 Purpose
+
+Build a separate desktop web dashboard for hospital receptionists and authorized healthcare staff.
+
+The dashboard must receive actual patient records from the central backend.
+
+It must not use unrelated hardcoded patient data as its primary operating mode.
+
+## 14.2 Main Dashboard
+
+Display:
+
+- Hospital branding.
+- Hospital name.
+- Current date.
+- Total patients.
+- Active queue.
+- Emergency cases.
+- Waiting patients.
+- Patients in consultation.
+- Completed consultations.
+
+## 14.3 Queue Management
+
+The dashboard must not rely exclusively on FIFO sorting.
+
+Sort by severity.
+
+```typescript
+const sortedQueue = [...patients].sort((a, b) => {
+  const priorityDifference =
+    priorityRank(a) - priorityRank(b);
+
+  if (priorityDifference !== 0) {
+    return priorityDifference;
+  }
+
+  return new Date(a.createdAt).getTime() -
+    new Date(b.createdAt).getTime();
+});
+```
+
+Priority order:
+
+1. Priority 0 SOS.
+2. Tier 3 emergency.
+3. High-severity Tier 2.
+4. Moderate-severity Tier 2.
+5. Lower-severity Tier 2.
+
+Do not display Tier 1 in the active hospital queue.
+
+## 14.4 Tier 2 Cards
+
+Display:
+
+- Patient identifier.
+- OPD token.
+- Symptoms in English.
+- Assigned department.
+- Hospital.
+- Severity score.
+- Received time.
+- Queue status.
+
+Use a white background and blue department indicator.
+
+## 14.5 Tier 3 Emergency Cards
+
+Use:
+
+- Light-red background.
+- Red border.
+- Emergency badge.
+- Prominent patient identifier.
+- Severity score.
+- Symptoms.
+- Received timestamp.
+- Priority label.
+
+## 14.6 Priority 0 SOS Cards
+
+These must always appear at the very top.
+
+Display:
+
+- Priority 0 indicator.
+- SOS ticket ID.
+- Patient identifier.
+- GPS coordinates.
+- Location link.
+- Timestamp.
+- Emergency status.
+- Ambient recording player.
+- CALLBACK PATIENT action.
+
+Example:
+
+```jsx
+<audio
+  controls
+  src={ambientAudioUrl}
+/>
+```
+
+Render the audio player only when a valid recording exists.
+
+## 14.7 Callback Functionality
+
+Provide a prominent CALLBACK PATIENT button.
+
+When clicked:
+
+- Retrieve authorized patient contact information.
+- Display confirmation.
+- Initiate a telephone call when the number exists.
+- Show an appropriate error if no contact information is available.
+
+Never fabricate patient contact information.
+
+## 14.8 Real-Time Queue
+
+Implement WebSocket-based updates or a reliable polling mechanism.
+
+Update:
+
+- New patients.
+- Emergency events.
+- Patient statuses.
+- Queue ordering.
+- Audio availability.
+
+Prevent duplicate events.
+
+Display the last successful synchronization time.
+
+---
+
+# PART 15 — AUTHENTICATION, SECURITY AND PRIVACY
+
+Implement:
+
+### Authentication
+
+- Patient authentication.
+- Hospital staff authentication.
+- Admin authentication.
+- Secure session handling.
+- Token expiration.
+- Logout.
+- Role-based access control.
+
+### Authorization
+
+Patients can access only their own records.
+
+Hospital personnel can access records assigned to their authorized hospital or operational scope.
+
+Administrators can manage authorized hospital configuration.
+
+### Data Security
+
+- HTTPS.
+- Secure API credentials.
+- Request validation.
+- File upload validation.
+- Rate limiting.
+- Access logging.
+- Protected media URLs.
+- Secure storage.
+- Database access controls.
+
+### Privacy
+
+- Obtain explicit permission for microphone access.
+- Obtain explicit permission for camera access.
+- Obtain explicit permission for location.
+- Explain emergency ambient audio recording.
+- Do not collect unnecessary patient information.
+- Define retention periods.
+- Provide deletion and privacy controls.
+- Avoid logging sensitive medical information.
+
+The system must be designed for applicable Indian data-protection and healthcare privacy requirements before production deployment.
+
+### Medical Safety
+
+- No autonomous disease diagnosis.
+- No invented prescriptions.
+- No fabricated dosage information.
+- No unsupported claims of hospital availability.
+- No false ambulance dispatch confirmation.
+- No automatic low-risk classification of uncertain symptoms.
+- Emergency escalation must not depend solely on AI availability.
+
+---
+
+# PART 16 — OFFLINE AND NETWORK FAILURE HANDLING
+
+The mobile application should handle unreliable connectivity.
+
+Implement:
+
+- Network state detection.
+- Retry controls.
+- Request cancellation.
+- Upload progress.
+- Appropriate timeouts.
+- Error messages in the preferred language.
+
+For patient safety:
+
+- Never display a token as confirmed unless the backend confirms it.
+- Never claim an SOS was received without server acknowledgement.
+- Provide local emergency instructions if the network is unavailable.
+- Provide a way to retry failed uploads.
+- Avoid automatically repeating non-idempotent requests.
+
+Do not promise offline AI triage.
+
+A previously received OPD token may be displayed from cached data, with a clear indication that its latest status has not been synchronized.
+
+---
+
+# PART 17 — TESTING AND QUALITY ASSURANCE
+
+Implement automated tests and physical-device testing.
+
+## 17.1 Unit Tests
+
+Test:
+
+- Haversine calculation.
+- Hospital specialty matching.
+- Hospital sorting.
+- Triage validation.
+- Severity validation.
+- OPD token generation.
+- SOS state machine.
+- Request validation.
+- Prescription safety handling.
+
+## 17.2 Backend Integration Tests
+
+Test:
+
+- Patient registration.
+- Login.
+- Audio upload.
+- Image upload.
+- Gemini response handling.
+- Triage persistence.
+- Hospital allocation.
+- Token generation.
+- SOS creation.
+- Ambient audio upload.
+- Dashboard queue retrieval.
+- Status changes.
+
+## 17.3 Mobile Tests
+
+Test on actual Android devices:
+
+- Registration.
+- Navigation.
+- Microphone permissions.
+- Camera permissions.
+- GPS permissions.
+- Audio recording.
+- Prescription capture.
+- Haptic feedback.
+- SOS activation.
+- SOS cancellation.
+- Network failures.
+- Application backgrounding.
+- App restart and session restoration.
+
+Test iOS separately for platform-specific permissions and audio behaviour.
+
+## 17.4 Dashboard Tests
+
+Test:
+
+- Login.
+- Queue retrieval.
+- Real-time updates.
+- Priority sorting.
+- Emergency card rendering.
+- Audio playback.
+- Callback.
+- Status updates.
+- Unauthorized access.
+
+---
+
+# PART 18 — COMPLETE ACCEPTANCE SCENARIOS
+
+The product is not complete until these end-to-end scenarios work.
+
+### Scenario 1: Patient Registration
+
+A new patient registers, selects Telugu as their preferred language, and reaches the native mobile home screen.
+
+Expected:
+- Account created.
+- Session established.
+- Language preference saved.
+- Native navigation working.
+
+### Scenario 2: Telugu Voice Triage
+
+Patient records symptoms in Telugu.
+
+Expected:
+- Native microphone works.
+- Audio uploaded.
+- Gemini interprets audio.
+- Symptoms translated into English.
+- Triage result generated.
+- Patient instructions returned in Telugu.
+
+### Scenario 3: Tier 1
+
+Patient describes a clearly mild complaint.
+
+Expected:
+- Conservative self-care response.
+- Appropriate disclaimer.
+- No OPD token by default.
+- No hospital queue entry.
+
+### Scenario 4: Tier 2
+
+Patient describes a complaint requiring a clinical examination.
+
+Expected:
+- Tier 2 result.
+- Department matching.
+- Hospital allocation.
+- OPD token generation.
+- Database persistence.
+- Dashboard entry.
+- Patient token display.
+
+### Scenario 5: Tier 3
+
+Patient reports potentially life-threatening symptoms.
+
+Expected:
+- Emergency escalation.
+- Severity score 10.
+- Emergency instructions.
+- Priority 0 or emergency queue entry.
+- Dashboard alert.
+
+### Scenario 6: Prescription Scanning
+
+Patient photographs a clear prescription.
+
+Expected:
+- Native camera works.
+- Image uploaded.
+- Gemini extracts readable information.
+- Instructions displayed in the selected language.
+
+### Scenario 7: Unreadable Prescription
+
+Patient photographs unclear handwriting.
+
+Expected:
+- Extraction aborted.
+- No invented medicine.
+- Exact pharmacist warning displayed.
+
+### Scenario 8: SOS Cancellation
+
+Patient presses the SOS button for less than 2.5 seconds.
+
+Expected:
+- Hold timer cancelled.
+- No SOS event created.
+- State returns to IDLE.
+
+### Scenario 9: SOS Activation
+
+Patient holds the button for 2.5 seconds.
+
+Expected:
+- Haptic feedback.
+- GPS capture.
+- Immediate Priority 0 backend event.
+- Dashboard notification.
+- Ten-second local siren where supported.
+- Twenty-second ambient recording with permission.
+- Audio upload.
+- SOS status updated.
+
+### Scenario 10: Dashboard Priority
+
+Multiple Tier 2, Tier 3, and SOS records are created.
+
+Expected:
+- Priority 0 appears first.
+- Tier 3 follows.
+- Tier 2 appears in severity order.
+- Equal-priority records use timestamp ordering.
+- Tier 1 is excluded.
+
+### Scenario 11: Gemini Outage
+
+Gemini API becomes unavailable.
+
+Expected:
+- Appropriate error handling.
+- No fabricated AI response.
+- Emergency guidance remains available.
+- SOS pathway remains operational.
+
+### Scenario 12: No Internet During SOS
+
+Patient activates SOS without internet access.
+
+Expected:
+- Local emergency guidance appears.
+- Application explains that the server has not confirmed receipt.
+- A safe retry mechanism is available.
+- No false dispatch confirmation is shown.
+
+---
+
+# PART 19 — DEVELOPMENT EXECUTION PLAN
+
+Implement the entire project sequentially.
+
+Do not generate all code in one uncontrolled operation.
+
+## PHASE 0 — Repository Inspection and Planning
+
+- Inspect existing repository.
+- Identify existing code.
+- Preserve working implementations.
+- Review environment.
+- Create architecture documentation.
+- Identify dependencies.
+- Prepare implementation plan.
+
+## PHASE 1 — Monorepo and Infrastructure
+
+- Create mobile project.
+- Create backend project.
+- Create admin project.
+- Configure TypeScript.
+- Configure shared types where appropriate.
+- Configure environment variables.
+- Configure database.
+- Configure development scripts.
+
+## PHASE 2 — Native Mobile Foundation
+
+- Configure Expo Router.
+- Build design system.
+- Implement onboarding.
+- Implement authentication.
+- Implement bottom navigation.
+- Build patient home screen.
+- Build profile and history.
+- Implement native drawer/navigation.
+
+## PHASE 3 — Backend Foundation
+
+- Configure Express.
+- Configure PostgreSQL.
+- Configure Prisma.
+- Create database models.
+- Implement authentication.
+- Implement authorization.
+- Implement storage.
+- Implement error handling.
+
+## PHASE 4 — Voice-to-Token
+
+- Implement native recording.
+- Implement audio upload.
+- Integrate Gemini.
+- Implement language detection.
+- Implement symptom extraction.
+- Implement structured response validation.
+- Implement triage classification.
+- Implement OPD token generation.
+
+## PHASE 5 — Smart Rx Decoder
+
+- Implement native camera.
+- Implement image capture.
+- Implement image upload.
+- Integrate Gemini image processing.
+- Implement prescription safety.
+- Implement translated result screens.
+
+## PHASE 6 — Intelligent Hospital Allocation
+
+- Seed hospital registry.
+- Implement specialty matching.
+- Implement Haversine calculation.
+- Implement hospital allocation.
+- Implement fallback behaviour.
+- Integrate allocation with tokens.
+
+## PHASE 7 — SOS Emergency System
+
+- Build native SOS UI.
+- Implement 2.5-second hold.
+- Implement state machine.
+- Implement haptics.
+- Implement location capture.
+- Implement emergency API.
+- Implement local siren.
+- Implement 20-second recording.
+- Implement secure audio upload.
+- Implement status tracking.
+
+## PHASE 8 — Hospital Dashboard
+
+- Build login.
+- Build dashboard overview.
+- Build patient queue.
+- Build Tier 2 cards.
+- Build Tier 3 cards.
+- Build Priority 0 cards.
+- Implement live updates.
+- Implement callback.
+- Implement audio player.
+- Implement status management.
+
+## PHASE 9 — Integration
+
+Connect all three applications.
+
+Verify:
+- Patient to backend.
+- Backend to Gemini.
+- Backend to database.
+- Backend to hospital routing.
+- Backend to dashboard.
+- Dashboard to queue status.
+- SOS to emergency queue.
+
+## PHASE 10 — Testing and Optimization
+
+- Run unit tests.
+- Run integration tests.
+- Test physical Android device.
+- Test iOS.
+- Test permission failures.
+- Test network failures.
+- Test security.
+- Optimize rendering.
+- Fix bugs.
+
+## PHASE 11 — Build and Deployment
+
+- Create Android development build.
+- Generate installable APK.
+- Generate Android AAB.
+- Prepare iOS build.
+- Deploy backend.
+- Configure PostgreSQL.
+- Configure object storage.
+- Deploy admin dashboard.
+- Configure production environment.
+- Test production integrations.
+
+---
+
+# PART 20 — DEPLOYMENT REQUIREMENTS
+
+## 20.1 Android
+
+Use EAS Build.
+
+Configure:
+
+- Android package identifier.
+- App icon.
+- Splash screen.
+- App permissions.
+- Environment configuration.
+- Release signing.
+
+Required outputs:
+
+- Development APK.
+- Production APK.
+- Production AAB.
+
+The application must be installable on a physical Android device.
+
+## 20.2 iOS
+
+Configure:
+
+- iOS bundle identifier.
+- App icon.
+- Permissions.
+- Provisioning.
+- EAS build configuration.
+
+Prepare a valid iOS build.
+
+## 20.3 Backend
+
+Deploy to a persistent, production-capable Node.js hosting environment.
+
+Configure:
+
+- API base URL.
+- Database connection.
+- Gemini credentials.
+- Object storage.
+- Authentication secrets.
+- CORS.
+- HTTPS.
+- Logging.
+- Monitoring.
+
+## 20.4 Admin
+
+Deploy the Next.js dashboard separately.
+
+Connect it to the same backend.
+
+---
+
+# PART 21 — ENVIRONMENT CONFIGURATION
+
+Create appropriate `.env.example` files.
+
+Backend:
+
+```env
+NODE_ENV=development
+PORT=5000
+
+DATABASE_URL=postgresql://user:password@localhost:5432/sanjeevani
+
+GEMINI_API_KEY=your_api_key
+GEMINI_MODEL=your_supported_model_id
+
+JWT_SECRET=replace_with_secure_secret
+
+STORAGE_PROVIDER=local
+STORAGE_BUCKET=
+STORAGE_ACCESS_KEY=
+STORAGE_SECRET_KEY=
+
+ADMIN_ORIGIN=http://localhost:3000
+```
+
+Mobile:
+
+```env
+EXPO_PUBLIC_API_URL=http://YOUR_LOCAL_NETWORK_IP:5000/api/v1
+```
+
+Admin:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+```
+
+Important:
+
+- Never put secret credentials in Expo public environment variables.
+- Never hardcode localhost as the mobile API address for physical-device testing.
+- Use the development machine's reachable LAN IP during local device testing.
+- Use HTTPS for deployed environments.
+
+---
+
+# PART 22 — REQUIRED DOCUMENTATION
+
+Generate:
+
+1. README.md.
+2. Architecture documentation.
+3. Mobile setup instructions.
+4. Backend setup instructions.
+5. Admin setup instructions.
+6. Database schema documentation.
+7. API documentation.
+8. Gemini integration documentation.
+9. SOS state machine documentation.
+10. Hospital allocation algorithm documentation.
+11. Testing instructions.
+12. Deployment instructions.
+13. Known limitations.
+14. Demo data instructions.
+
+Include exact commands required to start all three applications.
+
+---
+
+# PART 23 — CODING AGENT OPERATING INSTRUCTIONS
+
+You are responsible for implementing the complete application, not simply describing how it could be built.
+
+Follow these rules:
+
+1. Inspect the repository before changing files.
+2. Preserve existing working code.
+3. Create actual files and implement functionality.
+4. Never substitute static screens for functional features.
+5. Never invent successful API responses.
+6. Never hardcode AI results as real processing.
+7. Never expose secrets.
+8. Never use browser APIs for patient-facing native functionality.
+9. Never skip backend integration.
+10. Never claim that an untested feature works.
+11. Use reusable components and services.
+12. Keep TypeScript types consistent across applications.
+13. Validate API responses.
+14. Handle all loading, success, and failure states.
+15. Test each feature before moving forward.
+16. Maintain a clear implementation log.
+17. Fix compilation errors before proceeding.
+18. Do not remove specified product capabilities to simplify implementation.
+19. Do not introduce unrelated features without a clear requirement.
+20. Preserve all specified SOS timing values and prescription safety rules.
+
+### After every development phase, report:
+
+- What was implemented.
+- Files created.
+- Files modified.
+- API endpoints completed.
+- Database changes.
+- Tests executed.
+- Test results.
+- Remaining problems.
+- Next phase.
+
+If the project is too large for one execution session, preserve progress in documentation and continue from the last verified checkpoint.
+
+Never claim the entire application is complete when only the frontend or a subset of the features has been implemented.
+
+---
+
+# PART 24 — FINAL DEFINITION OF DONE
+
+Sanjeevani Triage will be considered complete only when all the following conditions are satisfied.
+
+### Native Mobile Application
+
+- Genuine React Native application.
+- Android installation works.
+- iOS build is prepared.
+- Native navigation works.
+- Native microphone works.
+- Native camera works.
+- Native GPS works.
+- Native haptic feedback works.
+- SOS hold interaction works.
+- Patient history works.
+- OPD token screens work.
+
+### AI and Backend
+
+- Gemini integration works.
+- Telugu voice processing works.
+- English and Hindi processing works.
+- Structured triage works.
+- Prescription scanning works.
+- Unclear handwriting safety works.
+- Hospital allocation works.
+- Token generation works.
+- SOS event creation works.
+- Audio uploads work.
+- PostgreSQL persistence works.
+
+### Hospital Dashboard
+
+- Authentication works.
+- Real patient data is displayed.
+- Severity sorting works.
+- Tier 1 filtering works.
+- Tier 2 cards work.
+- Tier 3 emergency cards work.
+- Priority 0 SOS cards work.
+- Callback functionality works.
+- Audio playback works.
+- Queue updates work.
+
+### Production Readiness
+
+- API credentials are secure.
+- Database is persistent.
+- Media is securely stored.
+- Permissions are handled correctly.
+- Failure scenarios are tested.
+- Physical-device testing is completed.
+- Deployment documentation exists.
+
+---
+
+# FINAL PRODUCT DIRECTIVE
+
+Build SANJEEVANI TRIAGE as a complete, working, native healthcare technology platform.
+
+The patient application must be a real Android and iOS application with genuine native device integration.
+
+The backend must provide secure AI processing, patient management, intelligent triage, hospital allocation, OPD token generation, and emergency event handling.
+
+The hospital dashboard must provide an operational priority-based patient queue.
+
+The five core capabilities must remain central to the product:
+
+1. Voice-to-Token OPD.
+2. Smart Rx Decoder.
+3. Three-Tier Intelligent Triage.
+4. 2.5-Second SOS Emergency System.
+5. Hospital Admin Priority Dashboard.
+
+Do not compromise native functionality for development convenience.
+
+Do not compromise patient safety for AI automation.
+
+Do not compromise the actual product architecture for visual demonstrations.
+
+**The objective is to deliver a functional, testable, installable, end-to-end healthcare product—not a website, not a UI prototype, and not a collection of disconnected feature demonstrations.**
+
+Build Sanjeevani Triage from the foundation to the final deployable product.
