@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
-import apiRouter from './src/server/routes';
+import app from './src/server/app';
 import { db } from './src/server/db';
 import { allocateHospital } from './src/server/hospitalEngine';
 
@@ -13,38 +13,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer() {
-  const app = express();
   const PORT = parseInt(process.env.PORT || '3000', 10);
   const isProduction = process.env.NODE_ENV === 'production';
-
-  // Middlewares
-  app.use(express.json({ limit: '25mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '25mb' }));
-
-  // CORS headers
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(200);
-    }
-    next();
-  });
-
-  // Health check endpoint
-  app.get('/api/health', (req, res) => {
-    res.json({
-      status: 'healthy',
-      app: 'Sanjeevani Triage',
-      time: new Date().toISOString(),
-      gemini_available: !!process.env.GEMINI_API_KEY,
-      configured_model: process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
-    });
-  });
-
-  // Mount API v1 Routes
-  app.use('/api/v1', apiRouter);
 
   // Development vs Production
   if (!isProduction) {
