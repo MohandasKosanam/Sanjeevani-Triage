@@ -24,3 +24,5 @@ mobile/app.json.backup
 ercGet-Content*
 *service-account*.json
 *credentials*.json
+
+.vercel
