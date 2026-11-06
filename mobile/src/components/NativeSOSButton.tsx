@@ -6,6 +6,8 @@ import {
   Pressable,
   Animated,
   Platform,
+  Alert,
+  Linking,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
@@ -19,9 +21,14 @@ export const NativeSOSButton: React.FC = () => {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const pressStartTimeRef = useRef<number>(0);
+  const triggeredRef = useRef<boolean>(false);
 
   const startPress = () => {
     setIsPressing(true);
+    triggeredRef.current = false;
+    pressStartTimeRef.current = Date.now();
+
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
@@ -50,12 +57,15 @@ export const NativeSOSButton: React.FC = () => {
     ).start();
 
     timerRef.current = setTimeout(async () => {
+      triggeredRef.current = true;
       await triggerSOS();
     }, 2500);
   };
 
   const cancelPress = () => {
+    const elapsed = Date.now() - pressStartTimeRef.current;
     setIsPressing(false);
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
@@ -64,6 +74,11 @@ export const NativeSOSButton: React.FC = () => {
     progressAnim.setValue(0);
     pulseAnim.stopAnimation();
     pulseAnim.setValue(1);
+
+    // If quick tap without 2.5s hold, navigate to the dedicated SOS tab screen
+    if (!triggeredRef.current && elapsed < 500) {
+      router.push('/(tabs)/sos');
+    }
   };
 
   const triggerSOS = async () => {
@@ -89,7 +104,7 @@ export const NativeSOSButton: React.FC = () => {
       // 1. Immediately submit Priority 0 SOS event
       const res = await api.dispatchSOS(lat, lng);
 
-      // 2. Open full-screen active SOS emergency overlay
+      // 2. Open full-screen active SOS emergency overlay with real ID
       router.push({
         pathname: '/sos-active',
         params: {
@@ -98,18 +113,23 @@ export const NativeSOSButton: React.FC = () => {
           lng: lng.toString(),
         },
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error('Failed to trigger emergency SOS:', e);
-      router.push({
-        pathname: '/sos-active',
-        params: {
-          sos_id: 'SOS-' + Date.now(),
-          lat: lat.toString(),
-          lng: lng.toString(),
-        },
-      });
+      const msg = e?.message || 'Hospital server unreachable';
+      Alert.alert(
+        'Hospital Dispatch Warning',
+        `Could not reach hospital network (${msg}). Please dial emergency services directly immediately.`,
+        [
+          { text: 'Call 108 Ambulance', onPress: () => Linking.openURL('tel:108'), style: 'destructive' },
+          { text: 'Open SOS Hub', onPress: () => router.push('/(tabs)/sos') },
+        ]
+      );
     } finally {
-      cancelPress();
+      setIsPressing(false);
+      progressAnim.stopAnimation();
+      progressAnim.setValue(0);
+      pulseAnim.stopAnimation();
+      pulseAnim.setValue(1);
     }
   };
 

@@ -201,6 +201,28 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
         </Pressable>
 
+        {/* CARD 4: 2.5s EMERGENCY SOS COMMAND (Requirement 6) */}
+        <Pressable
+          onPress={() => router.push('/(tabs)/sos')}
+          style={({ pressed }) => [styles.sosCard, pressed && { opacity: 0.94 }]}
+        >
+          <View style={styles.sosCardIconBadge}>
+            <Ionicons name="alert-circle" size={22} color="#ffffff" />
+          </View>
+          <View style={styles.sosCardTextGroup}>
+            <View style={styles.sosCardHeaderRow}>
+              <Text style={styles.sosCardTitle}>Priority 0 Emergency SOS</Text>
+              <View style={styles.sosBadgePill}>
+                <Text style={styles.sosBadgePillText}>EMERGENCY</Text>
+              </View>
+            </View>
+            <Text style={styles.sosCardSubtitle}>
+              2.5s hold protocol for instant hospital queue dispatch & 108
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#e11d48" />
+        </Pressable>
+
         {/* ACTIVE OPD TOKEN PREVIEW (When booked) */}
         {activeToken && (
           <Pressable
@@ -538,5 +560,57 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748b',
     marginTop: 2,
+  },
+  sosCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff1f2',
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#fecdd3',
+    marginBottom: 14,
+  },
+  sosCardIconBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#e11d48',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  sosCardTextGroup: {
+    flex: 1,
+  },
+  sosCardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  sosCardTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#881337',
+  },
+  sosBadgePill: {
+    backgroundColor: '#ffe4e6',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#fecdd3',
+  },
+  sosBadgePillText: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#be123c',
+    letterSpacing: 0.5,
+  },
+  sosCardSubtitle: {
+    fontSize: 11,
+    color: '#9f1239',
+    marginTop: 2,
+    lineHeight: 15,
   },
 });

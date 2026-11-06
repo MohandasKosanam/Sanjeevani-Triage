@@ -55,15 +55,10 @@ export default function TabLayout() {
 
       {/* Floating Center 2.5s SOS Emergency Button */}
       <Tabs.Screen
-        name="sos-placeholder"
+        name="sos"
         options={{
-          title: '',
+          title: 'SOS',
           tabBarButton: () => <NativeSOSButton />,
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault(); // Don't navigate, handled by long press
-          },
         }}
       />
 
